@@ -1,4 +1,4 @@
-package com.example.application.home
+package com.example.application.home.Article
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
