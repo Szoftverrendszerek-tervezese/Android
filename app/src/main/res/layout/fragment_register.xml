@@ -60,6 +60,7 @@
         android:layout_marginStart="96dp"
         android:layout_marginLeft="96dp"
         android:layout_marginTop="32dp"
+        android:text="@string/password"
         android:autofillHints="@string/password"
         android:drawablePadding="10dp"
         android:inputType="textPassword"
