@@ -60,11 +60,11 @@
         android:layout_marginStart="96dp"
         android:layout_marginLeft="96dp"
         android:layout_marginTop="32dp"
+        android:autofillHints="@string/password"
         android:drawablePadding="10dp"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailEditText"
-        android:autofillHints="@string/password"
         tools:ignore="LabelFor" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -73,6 +73,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.06" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="124dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="140dp"
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="88dp"
+        android:background="@drawable/rounded_button"
+        android:text="Save"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
