@@ -50,7 +50,9 @@
         app:layout_constraintStart_toStartOf="parent"
         android:autofillHints="Email"
         app:layout_constraintTop_toBottomOf="@+id/userNameEditText"
-        tools:ignore="LabelFor" />
+        tools:ignore="LabelFor"
+        android:drawableLeft="@drawable/email_icon"
+        android:drawableStart="@drawable/email_icon" />
 
 
     <EditText
@@ -66,14 +68,9 @@
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailEditText"
-        tools:ignore="LabelFor" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.06" />
+        tools:ignore="LabelFor"
+        android:drawableLeft="@drawable/password_icon"
+        android:drawableStart="@drawable/password_icon" />
 
     <Button
         android:id="@+id/saveButton"
@@ -83,9 +80,15 @@
         android:layout_marginLeft="140dp"
         android:layout_marginTop="88dp"
         android:background="@drawable/rounded_button"
-        android:text="Save"
+        android:text="@string/save"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.06" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
