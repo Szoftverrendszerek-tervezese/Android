@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "805061626223",
+    "firebase_url": "https://cross-platform-learning-env.firebaseio.com",
+    "project_id": "cross-platform-learning-env",
+    "storage_bucket": "cross-platform-learning-env.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805061626223:android:b689e6f76d8cd9de50409a",
+        "android_client_info": {
+          "package_name": "com.example.application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "805061626223-b4176osq7dp2mt3qjp2eqpqcm12ggme8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChuVuFk9QhaVo6Df5lBBlmL6vI3EqREXo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "805061626223-b4176osq7dp2mt3qjp2eqpqcm12ggme8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
