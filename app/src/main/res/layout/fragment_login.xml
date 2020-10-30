@@ -44,7 +44,7 @@
             android:id="@+id/usernameTextInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username" />
+            android:hint="@string/username" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -64,26 +64,28 @@
             android:id="@+id/passwordTextInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="110dp"
+        android:layout_height="40dp"
         android:text="@string/log_in"
         app:layout_constraintBottom_toTopOf="@id/signupButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout"
         android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/buttonColor"
         />
 
     <Button
         android:id="@+id/signupButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="110dp"
+        android:layout_height="40dp"
         android:text="@string/sign_up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -91,6 +93,8 @@
         app:layout_constraintTop_toBottomOf="@id/loginButton"
         app:layout_constraintVertical_bias="0.4"
         android:layout_marginBottom="40dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/buttonColor"
         />
 
 
