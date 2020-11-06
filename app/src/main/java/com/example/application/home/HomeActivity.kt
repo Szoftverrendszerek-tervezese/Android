@@ -8,6 +8,6 @@ import com.example.application.R
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_login)
+        setContentView(R.layout.activity_splash)
     }
 }
