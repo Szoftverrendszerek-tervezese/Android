@@ -7,8 +7,8 @@ import com.example.application.R
 
 class AuthenticationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("Helo", "Auth");
         super.onCreate(savedInstanceState)
-        Log.d("Helo", "authentication")
-        setContentView(R.layout.activity_authentication)
+        setContentView(R.layout.fragment_register)
     }
 }
