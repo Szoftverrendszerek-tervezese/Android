@@ -11,12 +11,11 @@
         android:id="@+id/logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
-        android:src="@drawable/logo">
-    </ImageView>
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -24,21 +23,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.06">
-    </androidx.constraintlayout.widget.Guideline>
+        app:layout_constraintGuide_percent="0.06" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/usernameInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/global_horizontal_margin"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="@dimen/global_horizontal_margin"
+        app:boxBackgroundColor="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo"
-        android:layout_marginEnd="@dimen/global_horizontal_margin"
-        android:layout_marginStart="@dimen/global_horizontal_margin"
-        android:layout_marginTop="50dp"
         app:startIconDrawable="@drawable/user_icon"
-        app:boxBackgroundColor="@android:color/transparent">
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopStart="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/usernameTextInput"
@@ -51,21 +54,26 @@
         android:id="@+id/passwordInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/global_horizontal_margin"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="@dimen/global_horizontal_margin"
+        app:boxBackgroundColor="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usernameInputLayout"
-        android:layout_marginEnd="@dimen/global_horizontal_margin"
-        android:layout_marginStart="@dimen/global_horizontal_margin"
-        android:layout_marginTop="20dp"
         app:startIconDrawable="@drawable/password_icon"
-        app:boxBackgroundColor="@android:color/transparent">
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopStart="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordTextInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -79,13 +87,14 @@
         app:layout_constraintBottom_toTopOf="@id/signupButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
         android:id="@+id/signupButton"
         android:layout_width="110dp"
         android:layout_height="40dp"
-        android:layout_marginBottom="40dp"
         android:background="@drawable/rounded_button"
         android:text="@string/sign_up"
         app:backgroundTint="@color/buttonColor"
