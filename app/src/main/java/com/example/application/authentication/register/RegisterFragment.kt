@@ -1,21 +1,21 @@
 package com.example.application.authentication.register
 
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import com.example.application.R
 import com.example.application.databinding.FragmentRegisterBinding
-
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import java.math.BigInteger
+import java.security.MessageDigest
 
 
 class RegisterFragment : Fragment() {
@@ -25,40 +25,86 @@ class RegisterFragment : Fragment() {
     private lateinit var userName: String
     private lateinit var password: String
     private var userID: Int = 0
+    private var myRef = Firebase.database.reference
+    private var userCount = "1"
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
+
+        val usersRef: DatabaseReference = myRef.child("usersLogin")
+        usersRef.addListenerForSingleValueEvent(
+            object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    userCount = dataSnapshot.childrenCount.toString()
+                    Log.d("Helo", "Usercount:  $userCount")
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            }
+        )
+
         binding.saveButton.setOnClickListener {
-            Toast.makeText(activity, "Helo", Toast.LENGTH_SHORT).show()
             Log.d("Helo", "clicked ! ")
             email = binding.emailEditText.text.toString()
             userName = binding.userNameEditText.text.toString()
             password = binding.passwordEditText.text.toString()
-            userID = generateID()
-            //database.get
-            // userID = generateID()
+            val passwordHash = password.toMd5()
             if (!isValidForm(userName, email, password)) {
                 return@setOnClickListener
             }
+            userID = generateID()
+            val user = User(userID, email, userName, passwordHash)
+            writeNewUser(user)
+            Log.d("Helo", "after writeNewUser")
         }
-
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+
+    private fun writeNewUser(user: User) {
+        myRef.child("usersLogin").child(userCount).child("email")
+            .setValue(user.email)
+        myRef.child("usersLogin").child(userCount).child("password")
+            .setValue(user.password)
+        myRef.child("usersLogin").child(userCount).child("userId")
+            .setValue(user.userID)
+        myRef.child("usersLogin").child(userCount).child("username")
+            .setValue(user.userName)
+        Log.d("Helo", "end writeNewUser")
     }
 
     private fun generateID(): Int {
-        var randomNumber: Int = 2
-        // randomNumber.nextInt(9999999)
-        //  val usersIDRef = FirebaseDatabase.getInstance().getReference("usersLogin")
-        // Log.d("Helo", usersIDRef.toString())
-        return randomNumber
+        Log.d("Helo", "begin generateID")
+        val userID = (9999..999999).random()
+        val usersRef: DatabaseReference = myRef.child("usersLogin")
+        var isIDFound = false
+        usersRef.addChildEventListener(object : ChildEventListener {
+
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val actualID = snapshot.child("userId").value.toString()
+                Log.d("Helo", "actualID: $actualID")
+                if (actualID ==  userID.toString()){
+                    generateID()
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+
+        })
+        return userID
+    }
+
+    private fun String.toMd5(): String {
+        val md = MessageDigest.getInstance("MD5")
+        return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
     }
 
     private fun isValidForm(userName: String, email: String, password: String): Boolean {
@@ -96,5 +142,4 @@ class RegisterFragment : Fragment() {
     private fun isValid(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
-
 }
