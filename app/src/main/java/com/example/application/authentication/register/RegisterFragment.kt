@@ -24,19 +24,32 @@ class RegisterFragment : Fragment() {
     private lateinit var email: String
     private lateinit var userName: String
     private lateinit var password: String
-    private  var userID : Int = 0
+    private var userID: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("Helo", "onCreate")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.d("Helo", "onCreateView")
-          binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
+
+        binding.saveButton.setOnClickListener {
+            Toast.makeText(activity, "Helo", Toast.LENGTH_SHORT).show()
+            Log.d("Helo", "clicked ! ")
+            email = binding.emailEditText.text.toString()
+            userName = binding.userNameEditText.text.toString()
+            password = binding.passwordEditText.text.toString()
+            userID = generateID()
+            //database.get
+            // userID = generateID()
+            if (!isValidForm(userName, email, password)) {
+                return@setOnClickListener
+            }
+        }
+
         return binding.root
     }
 
@@ -45,27 +58,15 @@ class RegisterFragment : Fragment() {
         Log.d("Helo", "onViewCreated")
         //  var saveButton = getView()?.findViewById<Button>(R.id.saveButton)
 
-        binding.saveButton.setOnClickListener {
-            Toast.makeText(activity, "Helo",Toast.LENGTH_SHORT).show()
-            Log.d("Helo", "clicked ! ")
-            email = binding.emailEditText.text.toString()
-            userName = binding.userNameEditText.text.toString()
-            password = binding.passwordEditText.text.toString()
-            userID = generateID()
-            //database.get
-           // userID = generateID()
-            if (!isValidForm(userName, email, password)) {
-                return@setOnClickListener
-            }
-        }
+
         Log.d("Helo", "We have arrived at the end of the listener")
     }
 
     private fun generateID(): Int {
-        var randomNumber : Int = 2
+        var randomNumber: Int = 2
         // randomNumber.nextInt(9999999)
         //  val usersIDRef = FirebaseDatabase.getInstance().getReference("usersLogin")
-       // Log.d("Helo", usersIDRef.toString())
+        // Log.d("Helo", usersIDRef.toString())
         return randomNumber
     }
 
