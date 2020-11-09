@@ -28,14 +28,12 @@ class RegisterFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("Helo", "onCreate")
+
     }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("Helo", "onCreateView")
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
-
         binding.saveButton.setOnClickListener {
             Toast.makeText(activity, "Helo", Toast.LENGTH_SHORT).show()
             Log.d("Helo", "clicked ! ")
@@ -55,11 +53,6 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("Helo", "onViewCreated")
-        //  var saveButton = getView()?.findViewById<Button>(R.id.saveButton)
-
-
-        Log.d("Helo", "We have arrived at the end of the listener")
     }
 
     private fun generateID(): Int {
@@ -72,11 +65,21 @@ class RegisterFragment : Fragment() {
 
     private fun isValidForm(userName: String, email: String, password: String): Boolean {
         // form validation
+
+        if (TextUtils.isEmpty(userName)) {
+            binding.userNameEditText.error = "UserName is Required"
+            return false
+        }
+
         if (TextUtils.isEmpty(email)) {
             binding.emailEditText.error = "Email is Required"
             return false
         }
 
+        if (TextUtils.isEmpty(password)) {
+            binding.passwordEditText.error = "Password is Required"
+            return false
+        }
         if (userName.length >= 10) {
             binding.userNameEditText.error = "User name is too long"
         }
@@ -84,10 +87,7 @@ class RegisterFragment : Fragment() {
             binding.emailEditText.error = "Email is not valid"
             return false
         }
-        if (TextUtils.isEmpty(password)) {
-            binding.passwordEditText.error = "Password is Required"
-            return false
-        }
+
         if (password.length < 6) {
             binding.passwordEditText.error = "Password must be 6 character long"
             return false
