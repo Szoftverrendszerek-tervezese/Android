@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.application.R
 import com.example.application.databinding.FragmentHomeBinding
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 
 // TODO: Rename parameter arguments, choose names that match
@@ -29,6 +30,12 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.root
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        val list = ArrayList<RecyclerItem>()
+        val database = FirebaseDatabase.getInstance()
+        val ref = database.getReference("article")
+
+
 
 
         return view
