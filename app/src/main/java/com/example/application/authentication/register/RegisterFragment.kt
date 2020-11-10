@@ -1,7 +1,6 @@
 package com.example.application.authentication.register
 
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.application.R
 import com.example.application.databinding.FragmentRegisterBinding
+import com.google.firebase.FirebaseError
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -57,7 +57,7 @@ class RegisterFragment : Fragment() {
                 return@setOnClickListener
             }
             userID = generateID()
-            val user = User(userID, email, userName, passwordHash)
+            val user = User(userID, email,passwordHash, userName )
             writeNewUser(user)
             Log.d("Helo", "after writeNewUser")
         }
@@ -66,39 +66,31 @@ class RegisterFragment : Fragment() {
 
 
     private fun writeNewUser(user: User) {
-        myRef.child("usersLogin").child(userCount).child("email")
-            .setValue(user.email)
-        myRef.child("usersLogin").child(userCount).child("password")
-            .setValue(user.password)
-        myRef.child("usersLogin").child(userCount).child("userId")
-            .setValue(user.userID)
-        myRef.child("usersLogin").child(userCount).child("username")
-            .setValue(user.userName)
-        Log.d("Helo", "end writeNewUser")
-    }
-
-    private fun generateID(): Int {
-        Log.d("Helo", "begin generateID")
-        val userID = (9999..999999).random()
-        val usersRef: DatabaseReference = myRef.child("usersLogin")
-        var isIDFound = false
-        usersRef.addChildEventListener(object : ChildEventListener {
-
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val actualID = snapshot.child("userId").value.toString()
-                Log.d("Helo", "actualID: $actualID")
-                if (actualID ==  userID.toString()){
-                    generateID()
-                }
-
+        myRef.child("usersLogin").setValue(user.userID)
+        myRef.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+                Log.d("Helo", dataSnapshot.value.toString())
+                myRef.child("usersLogin").child(user.userID.toString()).child("email").setValue(user.email)
+                myRef.child("usersLogin").child(user.userID.toString()).child("password").setValue(user.password)
+                myRef.child("usersLogin").child(user.userID.toString()).child("username").setValue(user.userName)
             }
 
             override fun onCancelled(error: DatabaseError) {}
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onChildRemoved(snapshot: DataSnapshot) {}
-
         })
+//        myRef.child("usersLogin").child(user.userID.toString()).child("email").setValue(user.email)
+//        myRef.child("usersLogin").child(user.userID.toString()).child("password").setValue(user.password)
+//        myRef.child("usersLogin").child(user.userID.toString()).child("username").setValue(user.userName)
+        Log.d("Helo", "end writeNewUser")
+    }
+
+    private fun generateID(): Int {
+        Log.d("Helo", "begin generateID")
+        val userID = (9999..999999).random()
+       // val usersRef: DatabaseReference = myRef.child("usersLogin")
+
         return userID
     }
 
