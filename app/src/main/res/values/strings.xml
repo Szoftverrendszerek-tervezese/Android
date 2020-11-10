@@ -10,6 +10,9 @@
     <string name="password">Password</string>
     <string name="save">Save</string>
     <string name="article_title">Article Title</string>
-    <string name="rating">Rating</string>
     <string name="description">Description</string>
+    <string name="author">Author:</string>
+    <string name="star_icon">star icon</string>
+    <string name="rating">Rating:</string>
+    <string name="uploaded">Uploaded:</string>
 </resources>

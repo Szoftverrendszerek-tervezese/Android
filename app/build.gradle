@@ -5,6 +5,11 @@ plugins {
 }
 
 android {
+    buildFeatures {
+        dataBinding true
+    }
+
+
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
@@ -31,9 +36,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-    buildFeatures {
-        dataBinding true
     }
 }
 
