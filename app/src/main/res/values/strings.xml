@@ -9,4 +9,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="save">Save</string>
+    <string name="article_title">Article Title</string>
+    <string name="rating">Rating</string>
+    <string name="description">Description</string>
 </resources>
