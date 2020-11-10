@@ -48,6 +48,8 @@ class RegisterFragment : Fragment() {
         )
 
         binding.saveButton.setOnClickListener {
+
+
             Log.d("Helo", "clicked ! ")
             email = binding.emailEditText.text.toString()
             userName = binding.userNameEditText.text.toString()
@@ -57,7 +59,7 @@ class RegisterFragment : Fragment() {
                 return@setOnClickListener
             }
             userID = generateID()
-            val user = User(userID, email,passwordHash, userName )
+            val user = User(userID, userName,email,passwordHash )
             writeNewUser(user)
             Log.d("Helo", "after writeNewUser")
         }
@@ -66,23 +68,27 @@ class RegisterFragment : Fragment() {
 
 
     private fun writeNewUser(user: User) {
-        myRef.child("usersLogin").setValue(user.userID)
-        myRef.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-                Log.d("Helo", dataSnapshot.value.toString())
-                myRef.child("usersLogin").child(user.userID.toString()).child("email").setValue(user.email)
-                myRef.child("usersLogin").child(user.userID.toString()).child("password").setValue(user.password)
-                myRef.child("usersLogin").child(user.userID.toString()).child("username").setValue(user.userName)
-            }
 
-            override fun onCancelled(error: DatabaseError) {}
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onChildRemoved(snapshot: DataSnapshot) {}
-        })
-//        myRef.child("usersLogin").child(user.userID.toString()).child("email").setValue(user.email)
-//        myRef.child("usersLogin").child(user.userID.toString()).child("password").setValue(user.password)
-//        myRef.child("usersLogin").child(user.userID.toString()).child("username").setValue(user.userName)
+//        myRef.addChildEventListener(object : ChildEventListener {
+//            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+//                Log.d("Helo", dataSnapshot.value.toString())
+//                myRef.child("usersLogin").setValue(user.userID)
+//                myRef.child("usersLogin").child(user.userID.toString()).child("email").setValue(user.email)
+//                myRef.child("usersLogin").child(user.userID.toString()).child("password").setValue(user.password)
+//                myRef.child("usersLogin").child(user.userID.toString()).child("username").setValue(user.userName)
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {}
+//            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+//            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+//            override fun onChildRemoved(snapshot: DataSnapshot) {}
+//        })
+       // myRef.child("usersLogin").push().setValue(user.userID)
+      //  myRef.child("usersLogin").setValue(user.userID)
+
+        myRef.child("usersLogin").child(user.userID.toString()).child("email").setValue(user.email)
+        myRef.child("usersLogin").child(user.userID.toString()).child("password").setValue(user.password)
+        myRef.child("usersLogin").child(user.userID.toString()).child("username").setValue(user.userName)
         Log.d("Helo", "end writeNewUser")
     }
 
