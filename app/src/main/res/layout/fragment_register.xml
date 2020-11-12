@@ -1,95 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".authentication.register.RegisterFragment">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="144dp"
-        android:layout_marginLeft="144dp"
-        android:layout_marginTop="100dp"
-        android:text="@string/register"
-        android:textSize="28sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/horizontal" />
+<layout>
 
-    <EditText
-        android:id="@+id/userNameEditText"
-        android:layout_width="212dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="96dp"
-        android:layout_marginLeft="96dp"
-        android:layout_marginTop="76dp"
-        android:drawableStart="@drawable/account_icon"
-        android:drawableLeft="@drawable/account_icon"
-        android:drawablePadding="10dp"
-        android:inputType="textPersonName"
-        android:text="@string/username"
-        android:autofillHints="Username"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:ignore="LabelFor" />
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/registerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".authentication.register.RegisterFragment">
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toTopOf="@id/userNameEditText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/emailEditText"
-        android:layout_width="212dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="96dp"
-        android:layout_marginLeft="96dp"
-        android:layout_marginTop="32dp"
-        android:drawablePadding="10dp"
-        android:inputType="textEmailAddress"
-        android:text="@string/email"
-        app:layout_constraintStart_toStartOf="parent"
-        android:autofillHints="Email"
-        app:layout_constraintTop_toBottomOf="@+id/userNameEditText"
-        tools:ignore="LabelFor"
-        android:drawableLeft="@drawable/email_icon"
-        android:drawableStart="@drawable/email_icon" />
+        <EditText
+            android:id="@+id/userNameEditText"
+            android:layout_width="212dp"
+            android:layout_height="45dp"
+            android:layout_marginBottom="32dp"
+            android:autofillHints="Username"
+            android:drawableStart="@drawable/account_icon"
+            android:drawableLeft="@drawable/account_icon"
+            android:drawablePadding="10dp"
+            android:hint="@string/username"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@id/emailEditText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="LabelFor" />
 
 
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="212dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="96dp"
-        android:layout_marginLeft="96dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/password"
-        android:autofillHints="@string/password"
-        android:drawablePadding="10dp"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailEditText"
-        tools:ignore="LabelFor"
-        android:drawableLeft="@drawable/password_icon"
-        android:drawableStart="@drawable/password_icon" />
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="220dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="32dp"
+            android:autofillHints="Email"
+            android:drawableStart="@drawable/email_icon"
+            android:drawableLeft="@drawable/email_icon"
+            android:drawablePadding="10dp"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="LabelFor" />
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="136dp"
-        android:layout_marginLeft="136dp"
-        android:layout_marginTop="84dp"
-        android:background="@drawable/rounded_button"
-        android:text="@string/save"
-        app:backgroundTint="@color/buttonColor"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.06" />
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="32dp"
+            android:autofillHints="@string/password"
+            android:drawableStart="@drawable/password_icon"
+            android:drawableLeft="@drawable/password_icon"
+            android:drawablePadding="10dp"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="@id/emailEditText"
+            app:layout_constraintStart_toStartOf="@id/emailEditText"
+            app:layout_constraintTop_toBottomOf="@+id/emailEditText"
+            tools:ignore="LabelFor" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/save"
+            app:backgroundTint="@color/buttonColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/passwordEditText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+
