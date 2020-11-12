@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.application.R
+import com.example.application.authentication.login.LoginFragment
 import com.example.application.authentication.register.RegisterFragment
 
 
@@ -16,9 +17,9 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
         val fragment: Fragment = RegisterFragment()
         supportFragmentManager
-                .beginTransaction()
-                .add(R.id.frameLayout, RegisterFragment())
-                .commit()
+            .beginTransaction()
+            .add(R.id.frameLayout, LoginFragment())
+            .commit()
 
     }
 }
