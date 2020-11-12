@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".authentication.AuthenticationActivity">
 
-
     <fragment
         android:id="@+id/fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -14,6 +13,6 @@
         android:layout_height="match_parent"
         app:defaultNavHost="true"
         app:navGraph="@navigation/auth_nav_graph"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="166dp" />
+        tools:layout_editor_absoluteX="124dp"
+        tools:layout_editor_absoluteY="237dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

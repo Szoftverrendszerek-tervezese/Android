@@ -26,7 +26,10 @@ class LoginFragment : Fragment() {
     ): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
-        binding.loginButton.setOnClickListener {}
+        binding.loginButton.setOnClickListener {
+
+
+        }
         return binding.root
     }
 
