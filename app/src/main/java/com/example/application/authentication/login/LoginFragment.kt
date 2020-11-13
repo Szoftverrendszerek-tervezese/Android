@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -15,7 +16,10 @@ import com.example.application.databinding.FragmentLoginBinding
 import com.example.application.home.HomeActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -25,7 +29,7 @@ class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private lateinit var userName: String
     private lateinit var password: String
-
+    private var myRef = Firebase.database.reference
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,10 +48,10 @@ class LoginFragment : Fragment() {
 
 
             if (checkUserInDataBase(userName, password)) {
-                val intent = Intent(activity, HomeActivity::class.java)
-                startActivity(intent)
+//                val intent = Intent(activity, HomeActivity::class.java)
+//                startActivity(intent)
             } else {
-                binding.loginButton.error = "Wrong credentials"
+                binding.usernameInputLayout.error = "Wrong credentials"
 
             }
 
@@ -55,21 +59,31 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-    fun checkUserInDataBase(userName: String, password: String): Boolean {
+    private fun checkUserInDataBase(userName: String, password: String): Boolean {
         val hashedPassword = password.toMd5()
-
-        object : ValueEventListener {
+        var isCorrect = true
+        val usersRef: DatabaseReference = myRef.child("usersLogin")
+        usersRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (ds in dataSnapshot.children) {
-                    val msg = ds.child("msg").getValue(String::class.java)!!
-                    Log.d("Helo", msg)
+                for (data in dataSnapshot.children) {
+                    // if the credentials are correct
+                    if (data.child("username").value.toString() == userName && data.child("password").value.toString() == hashedPassword) {
+                        Log.d("Helo", "Itt vagy")
+                        Toast.makeText(activity,"Log in successful",Toast.LENGTH_SHORT).show()
+                        val intent = Intent(activity, HomeActivity::class.java)
+                        startActivity(intent)
+                    }
                 }
+
             }
 
-            override fun onCancelled(databaseError: DatabaseError) {}
-        }
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("The read failed: " + databaseError.code)
+            }
+        })
 
-        return false
+        Log.d("Helo", isCorrect.toString())
+        return isCorrect
     }
 
 
@@ -79,7 +93,7 @@ class LoginFragment : Fragment() {
 
         binding.signupButton.setOnClickListener {
             Navigation.findNavController(view)
-                .navigate(R.id.action_loginFragment_to_registerFragment2);
+                .navigate(R.id.action_loginFragment_to_registerFragment2)
         }
     }
 
