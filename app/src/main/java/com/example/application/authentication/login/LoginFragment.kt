@@ -46,43 +46,38 @@ class LoginFragment : Fragment() {
                 return@setOnClickListener
             }
 
-
-            if (checkUserInDataBase(userName, password)) {
-//                val intent = Intent(activity, HomeActivity::class.java)
-//                startActivity(intent)
-            } else {
-                binding.usernameInputLayout.error = "Wrong credentials"
-
+            if (!checkUserInDataBase(userName, password)){
+                Log.d("Helo", "itt vagy")
+                Toast.makeText(activity, "Wrong credentials", Toast.LENGTH_SHORT).show()
             }
-
         }
         return binding.root
     }
 
     private fun checkUserInDataBase(userName: String, password: String): Boolean {
         val hashedPassword = password.toMd5()
-        var isCorrect = true
         val usersRef: DatabaseReference = myRef.child("usersLogin")
+        var isCorrect = false
+
         usersRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
                     // if the credentials are correct
                     if (data.child("username").value.toString() == userName && data.child("password").value.toString() == hashedPassword) {
-                        Log.d("Helo", "Itt vagy")
-                        Toast.makeText(activity,"Log in successful",Toast.LENGTH_SHORT).show()
+                        Log.d("Helo", "itt vagy")
+                        Toast.makeText(activity, "Log in successful", Toast.LENGTH_SHORT).show()
                         val intent = Intent(activity, HomeActivity::class.java)
                         startActivity(intent)
+                        isCorrect = true
                     }
                 }
-
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 println("The read failed: " + databaseError.code)
             }
         })
-
-        Log.d("Helo", isCorrect.toString())
+        Log.d("Helo", "before return: $isCorrect")
         return isCorrect
     }
 
