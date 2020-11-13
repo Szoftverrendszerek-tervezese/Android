@@ -39,22 +39,25 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         val ref = database.getReference("users")
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for(data in dataSnapshot.children){
-                    for(d in data.children){
-                        if(d.key=="articles"){
-                            for(articles in d.children){
+                for (data in dataSnapshot.children) {
+                    val userName = data.child("userName").value.toString()
+                    for (d in data.children) {
+                        if (d.key == "articles") {
+                            for (articles in d.children) {
                                 val art = RecyclerItem()
-                                art.title=articles.child("title").value.toString()
-                                art.rating=articles.child("currentRating").value.toString()
-                                art.description=articles.child("description").value.toString()
-                                art.content=articles.child("text").value.toString()
+                                art.title = articles.child("title").value.toString()
+                                art.rating = articles.child("currentRating").value.toString()
+                                art.description = articles.child("description").value.toString()
+                                art.content = articles.child("text").value.toString()
+                                art.date = articles.child("date").value.toString()
+                                art.author = userName
                                 list.add(art)
                             }
                         }
                     }
                 }
 
-                binding.recyclerView.adapter=RecyclerAdapter(list, this@HomeFragment)
+                binding.recyclerView.adapter = RecyclerAdapter(list, this@HomeFragment)
 
             }
 
@@ -69,13 +72,15 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
     override fun onItemClick(item: RecyclerItem) {
         val bundle = Bundle()
-        bundle.putString("title",item.title)
-        bundle.putString("rating",item.rating)
-        bundle.putString("content",item.content)
+        bundle.putString("title", item.title)
+        bundle.putString("rating", item.rating)
+        bundle.putString("content", item.content)
+        bundle.putString("date", item.date)
+        bundle.putString("author", item.author)
 
         val fragment: Fragment = ArticleFragment()
         fragment.arguments = bundle
-        fragmentManager?.beginTransaction()?.replace(R.id.frameLayout,fragment)?.commit()
+        fragmentManager?.beginTransaction()?.replace(R.id.frameLayout, fragment)?.commit()
     }
 
 
