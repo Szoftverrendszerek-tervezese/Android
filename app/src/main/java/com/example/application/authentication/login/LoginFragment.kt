@@ -1,60 +1,117 @@
 package com.example.application.authentication.login
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import com.example.application.R
+import com.example.application.databinding.FragmentLoginBinding
+import com.example.application.home.HomeActivity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import java.math.BigInteger
+import java.security.MessageDigest
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LoginFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private lateinit var binding: FragmentLoginBinding
+    private lateinit var userName: String
+    private lateinit var password: String
+    private var myRef = Firebase.database.reference
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
+        binding.loginButton.setOnClickListener {
+            userName = binding.usernameInputLayout.editText?.text.toString()
+            password = binding.passwordInputLayout.editText?.text.toString()
+            Log.d("Helo", "usernaem: $userName")
+            Log.d("Helo", "password: $password")
+            if (!isValidForm(userName, password)) {
+                return@setOnClickListener
+            }
+
+            if (!checkUserInDataBase(userName, password)){
+                Log.d("Helo", "itt vagy")
+                Toast.makeText(activity, "Wrong credentials", Toast.LENGTH_SHORT).show()
+            }
+        }
+        return binding.root
+    }
+
+    private fun checkUserInDataBase(userName: String, password: String): Boolean {
+        val hashedPassword = password.toMd5()
+        val usersRef: DatabaseReference = myRef.child("usersLogin")
+        var isCorrect = false
+
+        usersRef.addValueEventListener(object : ValueEventListener {
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (data in dataSnapshot.children) {
+                    // if the credentials are correct
+                    if (data.child("username").value.toString() == userName && data.child("password").value.toString() == hashedPassword) {
+                        Log.d("Helo", "itt vagy")
+                        Toast.makeText(activity, "Log in successful", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(activity, HomeActivity::class.java)
+                        startActivity(intent)
+                        isCorrect = true
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("The read failed: " + databaseError.code)
+            }
+        })
+        Log.d("Helo", "before return: $isCorrect")
+        return isCorrect
+    }
+
+
+    //this method is only used for going to register Fragment.
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.signupButton.setOnClickListener {
+            Navigation.findNavController(view)
+                .navigate(R.id.action_loginFragment_to_registerFragment2)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false)
+
+    private fun isValidForm(userName: String, password: String): Boolean {
+        if (TextUtils.isEmpty(userName)) {
+            binding.usernameInputLayout.error = "UserName is Required"
+            return false
+        }
+
+
+        if (TextUtils.isEmpty(password)) {
+            binding.passwordInputLayout.error = "Password is Required"
+            return false
+        }
+
+        return true
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LoginFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LoginFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun String.toMd5(): String {
+        val md = MessageDigest.getInstance("MD5")
+        return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
     }
+
 }

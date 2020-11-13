@@ -9,6 +9,6 @@ class AuthenticationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("Helo", "Auth");
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_register)
+        setContentView(R.layout.activity_authentication)
     }
 }
