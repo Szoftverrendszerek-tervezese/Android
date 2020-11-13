@@ -15,4 +15,6 @@
     <string name="star_icon">star icon</string>
     <string name="rating">Rating:</string>
     <string name="uploaded">Uploaded:</string>
+    <string name="rate_the_article_now">Rate the article now</string>
+    <string name="comments">Comments</string>
 </resources>

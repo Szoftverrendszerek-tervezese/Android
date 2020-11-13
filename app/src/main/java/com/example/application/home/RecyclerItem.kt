@@ -6,5 +6,6 @@ data class RecyclerItem(
     var description: String = "",
     var content: String = "",
     var date: String = "",
-    var author: String = ""
+    var author: String = "",
+    var comments: Long = 0
 )

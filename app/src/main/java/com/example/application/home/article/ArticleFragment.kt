@@ -1,6 +1,7 @@
 package com.example.application.home.article
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,8 @@ class ArticleFragment : Fragment() {
         binding.articleTextView.text = bundle?.getString("content")
         binding.dateText.text = bundle?.getString("date")
         binding.authorText.text = bundle?.getString("author")
+        val comment = bundle?.getString("comments")
+        binding.comment.text = "$comment Comments"
 
         return view
 

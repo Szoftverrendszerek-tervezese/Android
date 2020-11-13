@@ -51,6 +51,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                                 art.content = articles.child("text").value.toString()
                                 art.date = articles.child("date").value.toString()
                                 art.author = userName
+                                art.comments = articles.child("comments").childrenCount
                                 list.add(art)
                             }
                         }
@@ -77,6 +78,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         bundle.putString("content", item.content)
         bundle.putString("date", item.date)
         bundle.putString("author", item.author)
+        bundle.putString("comments", item.comments.toString())
 
         val fragment: Fragment = ArticleFragment()
         fragment.arguments = bundle
