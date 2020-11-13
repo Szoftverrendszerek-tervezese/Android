@@ -13,13 +13,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("Helo", "home")
-
         setContentView(R.layout.activity_home)
-        val fragment: Fragment = RegisterFragment()
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.frameLayout, LoginFragment())
-            .commit()
+
 
     }
 }
