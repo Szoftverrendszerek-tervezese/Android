@@ -1,20 +1,19 @@
 package com.example.application.authentication.register
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.application.R
 import com.example.application.databinding.FragmentRegisterBinding
-import com.example.application.home.HomeActivity
-import com.google.firebase.FirebaseError
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.math.BigInteger
@@ -29,55 +28,21 @@ class RegisterFragment : Fragment() {
     private lateinit var password: String
     private var userID: Int = 0
     private var myRef = Firebase.database.reference
-    private var userCount = "1"
+    private var userNames: MutableList<String> = mutableListOf()
+    private var emails: MutableList<String> = mutableListOf()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
-
-        val usersRef: DatabaseReference = myRef.child("usersLogin")
-        usersRef.addListenerForSingleValueEvent(
-            object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    userCount = dataSnapshot.childrenCount.toString()
-                    Log.d("Helo", "Usercount:  $userCount")
-                }
-
-                override fun onCancelled(error: DatabaseError) {}
-            }
-        )
-        binding.saveButton.setOnClickListener {
-
-
-            Log.d("Helo", "clicked ! ")
-            email = binding.emailEditText.text.toString()
-            userName = binding.userNameEditText.text.toString()
-            password = binding.passwordEditText.text.toString()
-            val passwordHash = password.toMd5()
-            if (!isValidForm(userName, email, password)) {
-                return@setOnClickListener
-            }
-            userID = generateID()
-            val user = User(userID, userName, email, passwordHash)
-            var userNames = mutableListOf<String>()
-            userNames = getAllUsername()
-            Log.d("Helo" , "USernames:  $userNames ")
-            writeNewUser(user)
-            Log.d("Helo", "after writeNewUser")
-        }
-        return binding.root
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        getAllUsername(userNames, emails)
     }
 
-    private fun getAllUsername(): MutableList<String> {
-        val userNames : MutableList<String> = mutableListOf()
+    private fun getAllUsername(userNames : MutableList<String>, emails : MutableList<String>  ) {
         val usersRef: DatabaseReference = myRef.child("usersLogin")
         usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
                     userNames.add(data.child("username").value.toString())
+                    emails.add(data.child("email").value.toString())
                 }
             }
 
@@ -85,17 +50,38 @@ class RegisterFragment : Fragment() {
                 println("The read failed: " + databaseError.code)
             }
         })
+    }
 
-        return userNames
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
+        binding.saveButton.setOnClickListener {
+            email = binding.emailEditText.text.toString()
+            userName = binding.userNameEditText.text.toString()
+            password = binding.passwordEditText.text.toString()
+            val passwordHash = password.toMd5()
+            Log.d("Helo", "Usernames : $userNames")
+            Log.d("Helo", "emails : $emails")
+            userID = generateID()
+            if (!isValidForm(userName, email, password))
+                return@setOnClickListener
+            val user = User(userID, userName, email, passwordHash)
+            writeNewUser(user)
+            Log.d("Helo", "USernames:  $userNames ")
+        }
+        return binding.root
     }
 
 
     private fun writeNewUser(user: User) {
         myRef.child("usersLogin").child(user.userID.toString()).child("email").setValue(user.email)
         myRef.child("usersLogin").child(user.userID.toString()).child("password")
-            .setValue(user.password)
+                .setValue(user.password)
         myRef.child("usersLogin").child(user.userID.toString()).child("username")
-            .setValue(user.userName)
+                .setValue(user.userName)
         Log.d("Helo", "end writeNewUser")
     }
 
@@ -122,6 +108,8 @@ class RegisterFragment : Fragment() {
         })
         return userID
     }
+
+
 
     private fun String.toMd5(): String {
         val md = MessageDigest.getInstance("MD5")
@@ -157,10 +145,22 @@ class RegisterFragment : Fragment() {
             binding.passwordEditText.error = "Password must be 6 character long"
             return false
         }
+
+        if(userNames.contains(userName)){
+            binding.userNameEditText.error = "This Username is taken"
+            return false
+        }
+
+        if(emails.contains(email)){
+            binding.emailEditText.error = "This email is taken"
+            return false
+        }
+
         return true
     }
 
     private fun isValid(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
+
 }
