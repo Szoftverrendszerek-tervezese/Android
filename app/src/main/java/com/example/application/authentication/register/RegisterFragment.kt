@@ -1,15 +1,18 @@
 package com.example.application.authentication.register
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.application.R
 import com.example.application.databinding.FragmentRegisterBinding
+import com.example.application.home.HomeActivity
 import com.google.firebase.FirebaseError
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
@@ -59,10 +62,31 @@ class RegisterFragment : Fragment() {
             }
             userID = generateID()
             val user = User(userID, userName, email, passwordHash)
+            var userNames = mutableListOf<String>()
+            userNames = getAllUsername()
+            Log.d("Helo" , "USernames:  $userNames ")
             writeNewUser(user)
             Log.d("Helo", "after writeNewUser")
         }
         return binding.root
+    }
+
+    private fun getAllUsername(): MutableList<String> {
+        val userNames : MutableList<String> = mutableListOf()
+        val usersRef: DatabaseReference = myRef.child("usersLogin")
+        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (data in dataSnapshot.children) {
+                    userNames.add(data.child("username").value.toString())
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("The read failed: " + databaseError.code)
+            }
+        })
+
+        return userNames
     }
 
 
@@ -77,9 +101,25 @@ class RegisterFragment : Fragment() {
 
     private fun generateID(): Int {
         Log.d("Helo", "begin generateID")
-        val userID = (9999..999999).random()
-        // val usersRef: DatabaseReference = myRef.child("usersLogin")
+        val userID = (999999..999999999).random()
+        val usersRef: DatabaseReference = myRef.child("usersLogin")
+        usersRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (data in dataSnapshot.children) {
+                    // if the credentials are correct
+                    Log.d("Helo", "ID:  ${data.key.toString()} ")
+                    Log.d("Helo", "MYID $userID")
+                    if (data.key.toString() == userID.toString()) {
+                        Log.d("Helo", "benn vagy")
+                        generateID()
+                    }
+                }
+            }
 
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("The read failed: " + databaseError.code)
+            }
+        })
         return userID
     }
 

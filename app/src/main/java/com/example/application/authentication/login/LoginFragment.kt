@@ -60,6 +60,7 @@ class LoginFragment : Fragment() {
         var isCorrect = false
 
         usersRef.addValueEventListener(object : ValueEventListener {
+
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
                     // if the credentials are correct
