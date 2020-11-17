@@ -1,5 +1,6 @@
 package com.example.application.authentication.login
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -31,7 +32,7 @@ class LoginFragment : Fragment() {
     private lateinit var userName: String
     private lateinit var password: String
     private var myRef = Firebase.database.reference
-    private lateinit var sharedPref : SharedPreferences
+    private lateinit var sharedPref: SharedPreferences
 
 
     override fun onCreateView(
@@ -50,7 +51,7 @@ class LoginFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            if (!checkUserInDataBase(userName, password)){
+            if (!checkUserInDataBase(userName, password)) {
                 Log.d("Helo", "itt vagy")
                 Toast.makeText(activity, "Wrong credentials", Toast.LENGTH_SHORT).show()
             }
@@ -71,6 +72,15 @@ class LoginFragment : Fragment() {
                     if (data.child("username").value.toString() == userName && data.child("password").value.toString() == hashedPassword) {
                         Log.d("Helo", "itt vagy")
                         Toast.makeText(activity, "Log in successful", Toast.LENGTH_SHORT).show()
+
+                        sharedPref =
+                            context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
+                        var editor = sharedPref.edit()
+                        editor.clear()
+                        editor.putString("email", data.child("email").value.toString())
+                        editor.putString("password", hashedPassword)
+                        editor.apply()
+
                         val intent = Intent(activity, HomeActivity::class.java)
                         startActivity(intent)
                         isCorrect = true

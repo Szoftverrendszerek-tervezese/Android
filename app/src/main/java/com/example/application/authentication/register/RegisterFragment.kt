@@ -1,15 +1,20 @@
 package com.example.application.authentication.register
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.application.R
 import com.example.application.databinding.FragmentRegisterBinding
+import com.example.application.home.HomeActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -30,13 +35,13 @@ class RegisterFragment : Fragment() {
     private var myRef = Firebase.database.reference
     private var userNames: MutableList<String> = mutableListOf()
     private var emails: MutableList<String> = mutableListOf()
-
+    private lateinit var sharedPref: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getAllUsername(userNames, emails)
     }
 
-    private fun getAllUsername(userNames : MutableList<String>, emails : MutableList<String>  ) {
+    private fun getAllUsername(userNames: MutableList<String>, emails: MutableList<String>) {
         val usersRef: DatabaseReference = myRef.child("usersLogin")
         usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -53,9 +58,9 @@ class RegisterFragment : Fragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
         binding.saveButton.setOnClickListener {
@@ -70,6 +75,19 @@ class RegisterFragment : Fragment() {
                 return@setOnClickListener
             val user = User(userID, userName, email, passwordHash)
             writeNewUser(user)
+            Toast.makeText(activity, "Registration Success", Toast.LENGTH_SHORT).show()
+            sharedPref =
+                context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
+            var editor = sharedPref.edit()
+            editor.clear()
+            editor.putString("email", user.email)
+            editor.putString("password", passwordHash)
+            editor.apply()
+
+
+            val intent = Intent(activity, HomeActivity::class.java)
+            startActivity(intent)
+
             Log.d("Helo", "USernames:  $userNames ")
         }
         return binding.root
@@ -79,9 +97,9 @@ class RegisterFragment : Fragment() {
     private fun writeNewUser(user: User) {
         myRef.child("usersLogin").child(user.userID.toString()).child("email").setValue(user.email)
         myRef.child("usersLogin").child(user.userID.toString()).child("password")
-                .setValue(user.password)
+            .setValue(user.password)
         myRef.child("usersLogin").child(user.userID.toString()).child("username")
-                .setValue(user.userName)
+            .setValue(user.userName)
         Log.d("Helo", "end writeNewUser")
     }
 
@@ -108,7 +126,6 @@ class RegisterFragment : Fragment() {
         })
         return userID
     }
-
 
 
     private fun String.toMd5(): String {
@@ -146,12 +163,12 @@ class RegisterFragment : Fragment() {
             return false
         }
 
-        if(userNames.contains(userName)){
+        if (userNames.contains(userName)) {
             binding.userNameEditText.error = "This Username is taken"
             return false
         }
 
-        if(emails.contains(email)){
+        if (emails.contains(email)) {
             binding.emailEditText.error = "This email is taken"
             return false
         }
