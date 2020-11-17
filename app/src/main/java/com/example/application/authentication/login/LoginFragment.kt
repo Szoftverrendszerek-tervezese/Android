@@ -1,6 +1,7 @@
 package com.example.application.authentication.login
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -30,6 +31,9 @@ class LoginFragment : Fragment() {
     private lateinit var userName: String
     private lateinit var password: String
     private var myRef = Firebase.database.reference
+    private lateinit var sharedPref : SharedPreferences
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
