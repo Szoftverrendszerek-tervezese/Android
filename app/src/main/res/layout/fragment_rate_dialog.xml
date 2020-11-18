@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:text="@string/give_it_a_rate"
         android:layout_centerHorizontal="true"
         />
