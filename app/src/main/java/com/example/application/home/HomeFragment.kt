@@ -86,7 +86,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
         val fragment: Fragment = ArticleFragment()
         fragment.arguments = bundle
-        fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)?.commit()
+        fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)?.addToBackStack("tag")?.commit()
     }
 
 
