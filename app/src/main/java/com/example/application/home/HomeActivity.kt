@@ -21,7 +21,7 @@ class HomeActivity : AppCompatActivity() {
         val binding = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
         val navController = findNavController(R.id.navHostFragment)
         val bottomNav = binding.bottomNavigationView
-        bottomNav?.setupWithNavController(navController)
+        bottomNav.setupWithNavController(navController)
 
 
     }
