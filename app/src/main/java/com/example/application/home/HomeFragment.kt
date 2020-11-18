@@ -48,11 +48,8 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                             for (username in dataSnapshot.children){
-                                Log.d("user","data: ${username.toString()} ")
-                                Log.d("user","userrr: ${username.key}")
                                 if(username.key.toString()==id){
                                     art.author = username.child("username").value.toString()
-                                    Log.d("user","username: ${username.child("username").value.toString()}")
                                     break;
                                 }
                             }
@@ -63,7 +60,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                         }
                     })
                     list.add(art)
-                    Log.d("user","user: ${art.author}")
                 }
 
                 binding.recyclerView.adapter = RecyclerAdapter(list, this@HomeFragment)
@@ -90,7 +86,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
         val fragment: Fragment = ArticleFragment()
         fragment.arguments = bundle
-        fragmentManager?.beginTransaction()?.replace(R.id.frameLayout, fragment)?.commit()
+        fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)?.commit()
     }
 
 
