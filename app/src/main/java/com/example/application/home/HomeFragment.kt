@@ -31,26 +31,39 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         val list = ArrayList<RecyclerItem>()
         val database = FirebaseDatabase.getInstance()
-        val ref = database.getReference("users")
+        val ref = database.getReference("articles")
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
-                    val userName = data.child("userName").value.toString()
-                    for (d in data.children) {
-                        if (d.key == "articles") {
-                            for (articles in d.children) {
-                                val art = RecyclerItem()
-                                art.title = articles.child("title").value.toString()
-                                art.rating = articles.child("currentRating").value.toString()
-                                art.description = articles.child("description").value.toString()
-                                art.content = articles.child("text").value.toString()
-                                art.date = articles.child("date").value.toString()
-                                art.author = userName
-                                art.comments = articles.child("comments").childrenCount
-                                list.add(art)
+                    val art = RecyclerItem()
+                    art.title = data.child("title").value.toString()
+                    art.rating = data.child("currentRating").value.toString()
+                    art.description = data.child("description").value.toString()
+                    art.content = data.child("text").value.toString()
+                    art.date = data.child("date").value.toString()
+                    val id = data.child("ownerId").value.toString()
+                    art.comments = data.child("comments").childrenCount
+                    val userRef = database.getReference("users")
+                    userRef.addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                            for (username in dataSnapshot.children){
+                                Log.d("user","data: ${username.toString()} ")
+                                Log.d("user","userrr: ${username.key}")
+                                if(username.key.toString()==id){
+                                    art.author = username.child("username").value.toString()
+                                    Log.d("user","username: ${username.child("username").value.toString()}")
+                                    break;
+                                }
                             }
                         }
-                    }
+                        override fun onCancelled(error: DatabaseError) {
+                            // Failed to read value
+                            Log.w("TAG", "Failed to read value.", error.toException())
+                        }
+                    })
+                    list.add(art)
+                    Log.d("user","user: ${art.author}")
                 }
 
                 binding.recyclerView.adapter = RecyclerAdapter(list, this@HomeFragment)
