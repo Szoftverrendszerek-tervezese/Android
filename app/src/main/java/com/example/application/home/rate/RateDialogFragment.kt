@@ -28,13 +28,13 @@ class RateDialogFragment : DialogFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_rate_dialog, container, false)
         val view = binding.root
 
-        binding.notButton.setOnClickListener{
+        binding.notButton.setOnClickListener {
             dismiss()
         }
 
         binding.submitButton.setOnClickListener {
             val rate = binding.ratingBar.rating
-            Log.d("value","the rating is: $rate")
+            Log.d("value", "the rating is: $rate")
             dismiss()
         }
 

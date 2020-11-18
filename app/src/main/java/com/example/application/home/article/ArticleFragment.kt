@@ -36,9 +36,9 @@ class ArticleFragment : Fragment() {
         val comment = bundle?.getString("comments")
         binding.comment.text = "$comment Comments"
 
-        binding.rate.setOnClickListener{
+        binding.rate.setOnClickListener {
             val fm = RateDialogFragment()
-            parentFragmentManager.let { it1 -> fm.show(it1,"") }
+            parentFragmentManager.let { it1 -> fm.show(it1, "") }
         }
 
         return view
