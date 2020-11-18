@@ -15,4 +15,7 @@
     <string name="uploaded">Uploaded:</string>
     <string name="rate_the_article_now">Rate the article now</string>
     <string name="comments">Comments</string>
+    <string name="give_it_a_rate">Give it a rate</string>
+    <string name="not_now">Not now</string>
+    <string name="submit">Submit</string>
 </resources>
