@@ -4,17 +4,17 @@
 
     <item
         android:id="@+id/searchFragment"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_search"
         android:title="Search"
         app:showAsAction="always" />
     <item
         android:id="@+id/homeFragment"
-        android:icon="@android:drawable/arrow_up_float"
+        android:icon="@drawable/ic_home"
         android:title="Home"
         app:showAsAction="always" />
     <item
         android:id="@+id/profileFragment"
-        android:icon="@android:drawable/radiobutton_off_background"
+        android:icon="@drawable/account_icon"
         android:title="Profile"
         app:showAsAction="always" />
 </menu>
