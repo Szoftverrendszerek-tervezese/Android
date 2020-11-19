@@ -1,13 +1,28 @@
 package com.example.application.home
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.application.R
+import com.example.application.authentication.login.LoginFragment
+import com.example.application.authentication.register.RegisterFragment
+import com.example.application.databinding.ActivityHomeBinding
+
 
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_profile)
+        Log.d("Helo", "home")
+
+        val binding = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
+        val navController = findNavController(R.id.navHostFragment)
+        val bottomNav = binding.bottomNavigationView
+        bottomNav.setupWithNavController(navController)
+
+
     }
 }
