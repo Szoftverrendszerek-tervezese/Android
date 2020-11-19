@@ -1,4 +1,4 @@
-package com.example.application.home
+package com.example.application.home.models
 
 data class RecyclerItem(
     var title: String = "",

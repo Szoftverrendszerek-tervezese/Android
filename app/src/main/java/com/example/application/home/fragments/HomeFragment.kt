@@ -1,24 +1,25 @@
-package com.example.application.home
+package com.example.application.home.fragments
 
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.application.R
 import com.example.application.databinding.FragmentHomeBinding
-import com.example.application.home.article.ArticleFragment
+import com.example.application.home.adapters.RecyclerAdapter
+import com.example.application.home.models.RecyclerItem
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 
-class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
+class HomeFragment : Fragment(),
+    RecyclerAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -62,7 +63,11 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     list.add(art)
                 }
 
-                binding.recyclerView.adapter = RecyclerAdapter(list, this@HomeFragment)
+                binding.recyclerView.adapter =
+                    RecyclerAdapter(
+                        list,
+                        this@HomeFragment
+                    )
 
             }
 
@@ -84,7 +89,8 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         bundle.putString("author", item.author)
         bundle.putString("comments", item.comments.toString())
 
-        val fragment: Fragment = ArticleFragment()
+        val fragment: Fragment =
+            ArticleFragment()
         fragment.arguments = bundle
         fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)?.addToBackStack("tag")?.commit()
     }

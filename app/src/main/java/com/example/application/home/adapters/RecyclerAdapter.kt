@@ -1,4 +1,4 @@
-package com.example.application.home
+package com.example.application.home.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.application.R
+import com.example.application.home.models.RecyclerItem
 
 class RecyclerAdapter(private val itemList: List<RecyclerItem>, private val listener: OnItemClickListener) : RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>() {
 

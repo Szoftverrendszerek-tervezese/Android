@@ -1,4 +1,4 @@
-package com.example.application.home.article
+package com.example.application.home.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.application.R
 import com.example.application.databinding.FragmentArticleBinding
-import com.example.application.home.rate.RateDialogFragment
 
 class ArticleFragment : Fragment() {
 
@@ -37,7 +36,8 @@ class ArticleFragment : Fragment() {
         binding.comment.text = "$comment Comments"
 
         binding.rate.setOnClickListener {
-            val fm = RateDialogFragment()
+            val fm =
+                RateDialogFragment()
             parentFragmentManager.let { it1 -> fm.show(it1, "") }
         }
 
