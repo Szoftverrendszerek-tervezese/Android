@@ -99,7 +99,7 @@
         android:layout_marginTop="15dp"
         android:clickable="true"
         android:focusable="true"
-        android:textColor="#FF0099CC"
+        android:textColor="@color/textLink"
         android:textSize="12sp"/>
 
     <TextView
