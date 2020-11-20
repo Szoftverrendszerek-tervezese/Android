@@ -40,7 +40,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     art.rating = data.child("currentRating").value.toString()
                     art.description = data.child("description").value.toString()
                     art.content = data.child("text").value.toString()
-                    art.date = data.child("date").value.toString()
+                    art.date = data.child("timestamp").value.toString()
                     val id = data.child("ownerId").value.toString()
                     art.comments = data.child("comments").childrenCount
                     val userRef = database.getReference("users")
@@ -49,7 +49,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
                             for (username in dataSnapshot.children){
                                 if(username.key.toString()==id){
-                                    art.author = username.child("username").value.toString()
+                                    art.author = username.child("userName").value.toString()
                                     break;
                                 }
                             }
