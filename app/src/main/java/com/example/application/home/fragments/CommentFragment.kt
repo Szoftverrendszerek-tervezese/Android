@@ -18,6 +18,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import org.w3c.dom.Comment
 
 
 class CommentFragment : Fragment() {
@@ -44,10 +45,20 @@ class CommentFragment : Fragment() {
     private fun recyclerViewAdaptation() {
 
         //here I need to fill the list
-        val list = readCommentsFromDatabase()
+        val list = generateDummyList(4)
         binding.commentRecyclerView.adapter = CommentAdapter(list)
         binding.commentRecyclerView.layoutManager = LinearLayoutManager(activity)
         binding.commentRecyclerView.setHasFixedSize(true)
+    }
+
+    private fun generateDummyList(size: Int): List<CommentItem> {
+        val list = ArrayList<CommentItem>()
+        for (i in 0 until size ){
+            val item = CommentItem("Username $i", "Date $i", "Nice comment here")
+            list += item
+        }
+        return list
+
     }
 
     private fun readCommentsFromDatabase(): List<CommentItem>{
