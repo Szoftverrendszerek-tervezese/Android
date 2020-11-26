@@ -18,8 +18,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 
-class HomeFragment : Fragment(),
-    RecyclerAdapter.OnItemClickListener {
+class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -63,11 +62,7 @@ class HomeFragment : Fragment(),
                     list.add(art)
                 }
 
-                binding.recyclerView.adapter =
-                    RecyclerAdapter(
-                        list,
-                        this@HomeFragment
-                    )
+                binding.recyclerView.adapter = RecyclerAdapter(list, this@HomeFragment)
 
             }
 
@@ -89,8 +84,7 @@ class HomeFragment : Fragment(),
         bundle.putString("author", item.author)
         bundle.putString("comments", item.comments.toString())
 
-        val fragment: Fragment =
-            ArticleFragment()
+        val fragment: Fragment = ArticleFragment()
         fragment.arguments = bundle
         fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)?.addToBackStack("tag")?.commit()
     }
