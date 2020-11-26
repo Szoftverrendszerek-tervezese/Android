@@ -111,7 +111,8 @@
             android:layout_marginTop="10dp"
             android:clickable="true"
             android:layout_marginLeft="10dp"
-            android:focusable="true" />
+            android:focusable="true"
+            android:textColor="@color/textLink"/>
 
         <TextView
             android:id="@+id/comment"
@@ -124,6 +125,7 @@
             android:layout_marginTop="10dp"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:textColor="@color/textLink"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
