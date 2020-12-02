@@ -8,8 +8,10 @@ import android.os.CountDownTimer
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.activityViewModels
 import com.example.application.R
 import com.example.application.authentication.AuthenticationActivity
+import com.example.application.home.GeneralViewModel
 import com.example.application.home.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -18,7 +20,6 @@ import java.util.*
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var sharedPref: SharedPreferences
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("Helo", "Splash")
@@ -39,9 +40,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun login(preferences: Map<String, *>) {
         val intent : Intent = if (preferences.containsKey("email") && preferences.containsKey("password")) {
-
             Intent(this,HomeActivity::class.java)
-
         } else {
             Intent(this,AuthenticationActivity::class.java)
         }

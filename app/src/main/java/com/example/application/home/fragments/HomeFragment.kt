@@ -1,5 +1,7 @@
 package com.example.application.home.fragments
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,12 +24,23 @@ import com.google.firebase.database.ValueEventListener
 
 class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
+
     private lateinit var binding: FragmentHomeBinding
-    private  val viewModel : GeneralViewModel by activityViewModels()
+    private val viewModel: GeneralViewModel by activityViewModels()
+    private lateinit var sharedPref: SharedPreferences
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        sharedPref =
+            context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
+        val uString = sharedPref.getString("userId", "")
+        if (uString != null) {
+            viewModel.userId = uString.toInt()
+        }
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.root
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
@@ -39,8 +52,10 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                 for (data in dataSnapshot.children) {
                     val art = RecyclerItem()
                     val articleId = data.child("articleId").value.toString().toInt()
-                    art.articleId  = articleId
+                    art.articleId = articleId
                     viewModel.articleId = articleId
+                    Log.d("Helo", "a home fragmentben a userID : ")
+
                     art.title = data.child("title").value.toString()
                     art.rating = data.child("currentRating").value.toString()
                     art.description = data.child("description").value.toString()
@@ -51,13 +66,14 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     val userRef = database.getReference("users")
                     userRef.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            for (username in dataSnapshot.children){
-                                if(username.key.toString()==id){
+                            for (username in dataSnapshot.children) {
+                                if (username.key.toString() == id) {
                                     art.author = username.child("userName").value.toString()
                                     break;
                                 }
                             }
                         }
+
                         override fun onCancelled(error: DatabaseError) {
                             // Failed to read value
                             Log.w("TAG", "Failed to read value.", error.toException())
@@ -90,7 +106,8 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
         val fragment: Fragment = ArticleFragment()
         fragment.arguments = bundle
-        fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)?.addToBackStack("tag")?.commit()
+        fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)
+            ?.addToBackStack("tag")?.commit()
     }
 
 }

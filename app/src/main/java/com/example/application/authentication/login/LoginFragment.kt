@@ -35,7 +35,7 @@ class LoginFragment : Fragment() {
     private lateinit var password: String
     private var myRef = Firebase.database.reference
     private lateinit var sharedPref: SharedPreferences
-    private val viewModel : GeneralViewModel by activityViewModels()
+    private val viewModel: GeneralViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,6 +83,7 @@ class LoginFragment : Fragment() {
                         editor.clear()
                         editor.putString("email", data.child("email").value.toString())
                         editor.putString("password", hashedPassword)
+                        editor.putString("userId", data.child("userId").value.toString())
                         editor.apply()
 
                         val intent = Intent(activity, HomeActivity::class.java)
@@ -109,7 +110,6 @@ class LoginFragment : Fragment() {
                 .navigate(R.id.action_loginFragment_to_registerFragment2)
         }
     }
-
 
     private fun isValidForm(userName: String, password: String): Boolean {
         if (TextUtils.isEmpty(userName)) {

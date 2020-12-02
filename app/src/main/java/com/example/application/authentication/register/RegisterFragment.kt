@@ -85,9 +85,8 @@ class RegisterFragment : Fragment() {
             editor.clear()
             editor.putString("email", user.email)
             editor.putString("password", passwordHash)
+            editor.putString("userId", userID.toString())
             editor.apply()
-
-
             val intent = Intent(activity, HomeActivity::class.java)
             startActivity(intent)
 
