@@ -152,6 +152,7 @@ class RegisterFragment : Fragment() {
         }
         if (userName.length >= 10) {
             binding.userNameEditText.error = "User name is too long"
+            return false
         }
         if (!isValid(email)) {
             binding.emailEditText.error = "Email is not valid"
@@ -175,6 +176,8 @@ class RegisterFragment : Fragment() {
 
         return true
     }
+
+
 
     private fun isValid(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
