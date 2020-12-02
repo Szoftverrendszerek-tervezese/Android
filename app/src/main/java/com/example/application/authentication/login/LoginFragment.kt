@@ -12,9 +12,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import com.example.application.R
 import com.example.application.databinding.FragmentLoginBinding
+import com.example.application.home.GeneralViewModel
 import com.example.application.home.HomeActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,7 +35,7 @@ class LoginFragment : Fragment() {
     private lateinit var password: String
     private var myRef = Firebase.database.reference
     private lateinit var sharedPref: SharedPreferences
-
+    private val viewModel : GeneralViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,9 +72,11 @@ class LoginFragment : Fragment() {
                 for (data in dataSnapshot.children) {
                     // if the credentials are correct
                     if (data.child("username").value.toString() == userName && data.child("password").value.toString() == hashedPassword) {
-                        Log.d("Helo", "itt vagy")
-                        Toast.makeText(activity, "Log in successful", Toast.LENGTH_SHORT).show()
 
+                        //for later usages
+                        viewModel.userId = data.child("userId").value.toString().toInt()
+
+                        Toast.makeText(activity, "Log in successful", Toast.LENGTH_SHORT).show()
                         sharedPref =
                             context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
                         var editor = sharedPref.edit()
@@ -92,7 +96,6 @@ class LoginFragment : Fragment() {
                 println("The read failed: " + databaseError.code)
             }
         })
-        Log.d("Helo", "before return: $isCorrect")
         return isCorrect
     }
 

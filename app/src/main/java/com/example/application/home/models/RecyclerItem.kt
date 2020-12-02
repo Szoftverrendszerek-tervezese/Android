@@ -1,6 +1,7 @@
 package com.example.application.home.models
 
 data class RecyclerItem(
+    var articleId : Int = 0 ,
     var title: String = "",
     var rating: String = "",
     var description: String = "",

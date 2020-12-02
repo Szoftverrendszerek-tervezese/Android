@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.application.R
 import com.example.application.databinding.FragmentHomeBinding
+import com.example.application.home.GeneralViewModel
 import com.example.application.home.adapters.RecyclerAdapter
 import com.example.application.home.models.RecyclerItem
 import com.google.firebase.database.DataSnapshot
@@ -21,7 +23,7 @@ import com.google.firebase.database.ValueEventListener
 class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentHomeBinding
-
+    private  val viewModel : GeneralViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +38,9 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
                     val art = RecyclerItem()
+                    val articleId = data.child("articleId").value.toString().toInt()
+                    art.articleId  = articleId
+                    viewModel.articleId = articleId
                     art.title = data.child("title").value.toString()
                     art.rating = data.child("currentRating").value.toString()
                     art.description = data.child("description").value.toString()
@@ -46,7 +51,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     val userRef = database.getReference("users")
                     userRef.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
-
                             for (username in dataSnapshot.children){
                                 if(username.key.toString()==id){
                                     art.author = username.child("userName").value.toString()
@@ -88,7 +92,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         fragment.arguments = bundle
         fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)?.addToBackStack("tag")?.commit()
     }
-
 
 }
 

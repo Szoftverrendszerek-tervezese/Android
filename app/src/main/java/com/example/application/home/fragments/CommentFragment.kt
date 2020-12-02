@@ -7,25 +7,28 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.application.R
 import com.example.application.databinding.FragmentCommentBinding
+import com.example.application.home.GeneralViewModel
 import com.example.application.home.adapters.CommentAdapter
-import com.example.application.home.adapters.RecyclerAdapter
 import com.example.application.home.models.CommentItem
-import com.example.application.home.models.RecyclerItem
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import org.w3c.dom.Comment
 
 
 class CommentFragment : Fragment() {
 
+
     var database = FirebaseDatabase.getInstance()
-    var myRefBusiness = database.getReference("articles")
+    var myRefArticles = database.getReference("articles")
+    private val viewModel: GeneralViewModel by activityViewModels()
 
 
     private lateinit var binding: FragmentCommentBinding
@@ -45,12 +48,12 @@ class CommentFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_comment, container, false)
         recyclerViewAdaptation()
         binding.imageButton.setOnClickListener {
-
-            val commentString = binding.commentEditText.toString()
+            val commentString = binding.commentEditText.text.toString()
             if (TextUtils.isEmpty(commentString)) {
+                Log.d("Helo", "ures")
                 binding.commentEditText.error = "Please add a comment"
+                return@setOnClickListener
             }
-
             addComment(commentString)
 
         }
@@ -104,8 +107,16 @@ class CommentFragment : Fragment() {
         })
         return list
     }
+
+
+    private fun addComment(commentString: String) {
+        val articleId = viewModel.articleId
+        val userID = viewModel.userId.toString()
+        Log.d("Helo", "articleID : $articleId")
+        Log.d("Helo", "userID : $userID")
+        myRefArticles.child(articleId.toString()).child("comments").child(userID).push().setValue(commentString)
+        Toast.makeText(activity,"Comment added", Toast.LENGTH_SHORT).show()
+        findNavController().navigate(R.id.action_commentFragment_to_homeFragment)
+    }
 }
 
-private fun addComment(commentString: String) {
-
-}

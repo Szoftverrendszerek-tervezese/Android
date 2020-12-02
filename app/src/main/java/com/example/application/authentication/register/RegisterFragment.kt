@@ -12,8 +12,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.application.R
 import com.example.application.databinding.FragmentRegisterBinding
+import com.example.application.home.GeneralViewModel
 import com.example.application.home.HomeActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -36,6 +38,7 @@ class RegisterFragment : Fragment() {
     private var userNames: MutableList<String> = mutableListOf()
     private var emails: MutableList<String> = mutableListOf()
     private lateinit var sharedPref: SharedPreferences
+    private val viewModel : GeneralViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getAllUsername(userNames, emails)
@@ -106,6 +109,7 @@ class RegisterFragment : Fragment() {
     private fun generateID(): Int {
         Log.d("Helo", "begin generateID")
         val userID = (999999..999999999).random()
+        viewModel.userId = userID
         val usersRef: DatabaseReference = myRef.child("usersLogin")
         usersRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {

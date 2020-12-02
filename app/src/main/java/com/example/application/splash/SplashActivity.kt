@@ -39,7 +39,9 @@ class SplashActivity : AppCompatActivity() {
 
     private fun login(preferences: Map<String, *>) {
         val intent : Intent = if (preferences.containsKey("email") && preferences.containsKey("password")) {
+
             Intent(this,HomeActivity::class.java)
+
         } else {
             Intent(this,AuthenticationActivity::class.java)
         }

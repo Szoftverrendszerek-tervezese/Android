@@ -39,14 +39,12 @@ class ArticleFragment : Fragment() {
             parentFragmentManager.let { it1 -> fm.show(it1, "") }
         }
 
+
         //this listener are going to the comment section
         binding.comment.setOnClickListener{
             Navigation.findNavController(view)
                 .navigate(R.id.action_homeFragment_to_commentFragment)
         }
-
         return view
     }
-
-
 }
