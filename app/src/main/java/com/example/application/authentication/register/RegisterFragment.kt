@@ -89,8 +89,6 @@ class RegisterFragment : Fragment() {
             editor.apply()
             val intent = Intent(activity, HomeActivity::class.java)
             startActivity(intent)
-
-            Log.d("Helo", "USernames:  $userNames ")
         }
         return binding.root
     }
@@ -114,10 +112,7 @@ class RegisterFragment : Fragment() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
                     // if the credentials are correct
-                    Log.d("Helo", "ID:  ${data.key.toString()} ")
-                    Log.d("Helo", "MYID $userID")
                     if (data.key.toString() == userID.toString()) {
-                        Log.d("Helo", "benn vagy")
                         generateID()
                     }
                 }

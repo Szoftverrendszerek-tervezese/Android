@@ -47,14 +47,11 @@ class LoginFragment : Fragment() {
         binding.loginButton.setOnClickListener {
             userName = binding.usernameInputLayout.editText?.text.toString()
             password = binding.passwordInputLayout.editText?.text.toString()
-            Log.d("Helo", "usernaem: $userName")
-            Log.d("Helo", "password: $password")
             if (!isValidForm(userName, password)) {
                 return@setOnClickListener
             }
 
             if (!checkUserInDataBase(userName, password)) {
-                Log.d("Helo", "itt vagy")
                 Toast.makeText(activity, "Wrong credentials", Toast.LENGTH_SHORT).show()
             }
         }
@@ -65,9 +62,7 @@ class LoginFragment : Fragment() {
         val hashedPassword = password.toMd5()
         val usersRef: DatabaseReference = myRef.child("usersLogin")
         var isCorrect = false
-
         usersRef.addValueEventListener(object : ValueEventListener {
-
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
                     // if the credentials are correct

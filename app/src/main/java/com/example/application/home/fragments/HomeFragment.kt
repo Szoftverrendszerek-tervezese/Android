@@ -37,8 +37,11 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         sharedPref =
             context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
         val uString = sharedPref.getString("userId", "")
+        val uString1 = sharedPref.getString("password", "")
+        Log.d("Helo", "uuseriD - shared pref: $uString")
+        Log.d("Helo", "password shared pref: $uString1")
         if (uString != null) {
-            viewModel.userId = uString.toInt()
+            //viewModel.userId = uString.toInt()
         }
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
