@@ -1,5 +1,6 @@
 package com.example.application.home.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.application.R
 import com.example.application.home.models.CommentItem
-import com.example.application.home.models.RecyclerItem
+
 
 class CommentAdapter(private val itemList: List<CommentItem>) :
     RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
@@ -16,7 +17,6 @@ class CommentAdapter(private val itemList: List<CommentItem>) :
         val userName : TextView = itemView.findViewById(R.id.userNameTextView)
         val date : TextView = itemView.findViewById(R.id.dateTextView)
         val text : TextView = itemView.findViewById(R.id.commentTextView)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
@@ -30,9 +30,7 @@ class CommentAdapter(private val itemList: List<CommentItem>) :
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val currentItem = itemList[position]
         holder.userName.text = currentItem.userName
-        holder.date.text = currentItem.date
-        holder.text.text = currentItem.text
-
-
+        holder.date.text = currentItem.timeStamp
+        holder.text.text = currentItem.commentText
     }
 }

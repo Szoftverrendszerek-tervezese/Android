@@ -19,8 +19,8 @@
             android:id="@+id/userNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pistike"
             android:layout_marginLeft="10dp"
+            android:text="Pistike"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -36,14 +36,14 @@
             android:id="@+id/commentTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
+
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             android:text="This is the text of the user's comment. here he can write his text bla bla
 lorem ipsum es meg mindem. Lassuk milyen hosszu text johet szóba hogyha tobbet irok akko kimegy a backgroudnb=l vagy mi ? Meg egy kicsit kell irjak hogy megtudjam de nagyon kivancsi"
-
-          android:layout_marginStart="10dp"
-          android:layout_marginEnd="10dp"
-          android:layout_marginTop="10dp"
-          android:layout_marginBottom="10dp"
             android:textSize="16sp" />
 
     </LinearLayout>

@@ -95,6 +95,7 @@ class RegisterFragment : Fragment() {
             editor.putString("email", user.email)
             editor.putString("password", passwordHash)
             editor.putString("userId", userID.toString())
+            editor.putString("userName", userName)
             editor.apply()
             findNavController().navigate(R.id.action_registerFragment2_to_homeFragment)
         }

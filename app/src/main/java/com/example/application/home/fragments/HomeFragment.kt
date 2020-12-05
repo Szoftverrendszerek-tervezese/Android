@@ -29,7 +29,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     private val viewModel: GeneralViewModel by activityViewModels()
     private lateinit var sharedPref: SharedPreferences
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,12 +37,9 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
             context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
         val uString = sharedPref.getString("userId", "")
         val uString1 = sharedPref.getString("password", "")
-        Log.d("Helo", "uuseriD - shared pref: $uString")
-        Log.d("Helo", "password shared pref: $uString1")
+        Log.d("Helo", "homefragment - useriD - shared pref: $uString")
+        Log.d("Helo", "homefragment - password shared pref: $uString1")
 
-        if (uString != null) {
-            //viewModel.userId = uString.toInt()
-        }
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.root
@@ -59,9 +55,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     val art = RecyclerItem()
                     val articleId = data.child("articleId").value.toString().toInt()
                     art.articleId = articleId
-                    viewModel.articleId.value = articleId
-                    Log.d("Helo", "a home fragmentben a userID : ${viewModel.userId.value}")
-
                     art.title = data.child("title").value.toString()
                     art.rating = data.child("currentRating").value.toString()
                     art.description = data.child("description").value.toString()
@@ -102,6 +95,10 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(item: RecyclerItem) {
+
+        //this is need for the commentsection
+        viewModel.articleId  = item.articleId
+
         val bundle = Bundle()
         bundle.putString("title", item.title)
         bundle.putString("rating", item.rating)
