@@ -23,4 +23,6 @@
     <string name="sign_out">Sign out</string>
     <string name="account_information">Account information</string>
     <string name="user_icon">user icon</string>
+    <string name="you_have_already_rated_this_article">You have already rated this article!</string>
+    <string name="ok">OK</string>
 </resources>

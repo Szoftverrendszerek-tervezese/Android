@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_articleFragment"
+            app:destination="@id/articleFragment" />
     </fragment>
     <fragment
         android:id="@+id/commentFragment"
@@ -71,5 +74,24 @@
         <action
             android:id="@+id/action_splashFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/articleFragment"
+        android:name="com.example.application.home.fragments.ArticleFragment"
+        android:label="ArticleFragment" >
+        <action
+            android:id="@+id/action_articleFragment_to_rateDialogFragment"
+            app:destination="@id/rateDialogFragment" />
+        <action
+            android:id="@+id/action_articleFragment_to_commentFragment"
+            app:destination="@id/commentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/rateDialogFragment"
+        android:name="com.example.application.home.fragments.RateDialogFragment"
+        android:label="RateDialogFragment" >
+        <action
+            android:id="@+id/action_rateDialogFragment_to_articleFragment"
+            app:destination="@id/articleFragment" />
     </fragment>
 </navigation>

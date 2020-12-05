@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.application.R
 import com.example.application.databinding.FragmentHomeBinding
@@ -20,6 +21,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 
 class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
@@ -37,8 +40,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
             context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
         val uString = sharedPref.getString("userId", "")
         val uString1 = sharedPref.getString("password", "")
-        Log.d("Helo", "homefragment - useriD - shared pref: $uString")
-        Log.d("Helo", "homefragment - password shared pref: $uString1")
 
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
@@ -56,7 +57,9 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     val articleId = data.child("articleId").value.toString().toInt()
                     art.articleId = articleId
                     art.title = data.child("title").value.toString()
-                    art.rating = data.child("currentRating").value.toString()
+                    val df =  DecimalFormat("#.##")
+                    df.roundingMode = RoundingMode.CEILING
+                    art.rating = df.format(data.child("currentRating").value.toString().toDouble())
                     art.description = data.child("description").value.toString()
                     art.content = data.child("text").value.toString()
                     art.date = data.child("timestamp").value.toString()
@@ -99,18 +102,9 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         //this is need for the commentsection
         viewModel.articleId  = item.articleId
 
-        val bundle = Bundle()
-        bundle.putString("title", item.title)
-        bundle.putString("rating", item.rating)
-        bundle.putString("content", item.content)
-        bundle.putString("date", item.date)
-        bundle.putString("author", item.author)
-        bundle.putString("comments", item.comments.toString())
-
-        val fragment: Fragment = ArticleFragment()
-        fragment.arguments = bundle
-        fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)
-            ?.addToBackStack("tag")?.commit()
+        viewModel.currentArticle.value = item
+        Navigation.findNavController(binding.root)
+            .navigate(R.id.action_homeFragment_to_articleFragment)
     }
 
 }
