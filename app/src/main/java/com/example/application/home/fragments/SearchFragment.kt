@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.example.application.R
 import com.example.application.databinding.FragmentSearchBinding
 import com.example.application.home.GeneralViewModel
@@ -27,7 +28,8 @@ class SearchFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        articles = viewModel.articles
+        articles = viewModel.articles.value!!
+
     }
 
     override fun onCreateView(
@@ -40,28 +42,25 @@ class SearchFragment : Fragment() {
         }
 
         Log.d("Helo", "size: ${articles.size}")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, articleTitles)
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, articles)
         binding.autoComplete.setAdapter(adapter)
 
 
         binding.autoComplete.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id -> //here the article need to be shown
                 val bundle = Bundle()
-                var pos = 0
-                for (i in 0 until articles.size) {
-                    if (articles[i].articleId == articles[position].articleId) {
-                        pos = position
-                    }
-                }
-               val x = parent.getItemAtPosition(position)
+
+                val x = parent.getItemAtPosition(position)
+
                 Log.d("Helo", "itemposition $x")
-                Log.d("Helo", "Position: $pos")
-                bundle.putString("title", articles[pos].title)
-                bundle.putString("rating", articles[pos].rating)
-                bundle.putString("content", articles[pos].content)
-                bundle.putString("date", articles[pos].date)
-                bundle.putString("author", articles[pos].author)
-                bundle.putString("comments", articles[pos].comments.toString())
+                Log.d("Helo", "Position: $position")
+                bundle.putString("title", articles[position].title)
+                bundle.putString("rating", articles[position].rating)
+                bundle.putString("content", articles[position].content)
+                bundle.putString("date", articles[position].date)
+                bundle.putString("author", articles[position].author)
+                bundle.putString("comments", articles[position].comments.toString())
                 val fragment: Fragment = ArticleFragment()
                 fragment.arguments = bundle
                 fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)

@@ -69,9 +69,8 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                         }
                     })
                     list.add(art)
-
                     // this will need for the search fragment
-                    viewModel.articles.add(art)
+                    viewModel.articles.value!!.add(art)
                 }
 
                 binding.recyclerView.adapter = RecyclerAdapter(list, this@HomeFragment)
