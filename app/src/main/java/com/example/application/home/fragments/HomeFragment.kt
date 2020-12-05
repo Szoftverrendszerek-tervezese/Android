@@ -29,7 +29,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     private val viewModel: GeneralViewModel by activityViewModels()
     private lateinit var sharedPref: SharedPreferences
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

@@ -19,28 +19,30 @@ import com.example.application.databinding.FragmentCommentBinding
 import com.example.application.home.GeneralViewModel
 import com.example.application.home.adapters.CommentAdapter
 import com.example.application.home.models.CommentItem
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 
 class CommentFragment : Fragment() {
 
 
-    var database = FirebaseDatabase.getInstance()
-    var myRefArticles = database.getReference("articles")
+    private var database = FirebaseDatabase.getInstance()
+    private var myRefArticles = database.getReference("articles")
     private val viewModel: GeneralViewModel by activityViewModels()
     private lateinit var sharedPref: SharedPreferences
-
+    private var comments: MutableList<CommentItem> = mutableListOf()
     private lateinit var binding: FragmentCommentBinding
+    private var articleId by Delegates.notNull<Int>()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        articleId = viewModel.articleId
         sharedPref = context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
-        readCommentsFromDatabase()
+        comments = viewModel.comments.value!!
     }
 
     override fun onCreateView(
@@ -55,9 +57,46 @@ class CommentFragment : Fragment() {
                 return@setOnClickListener
             }
             addCommentToDatabase(commentString)
-
         }
         return binding.root
+    }
+
+    private fun addCommentToDatabase(commentString: String) {
+        //val commentId = random
+        val commentId = (99..99999).random()
+        val userID = sharedPref.getString("userId", "")
+        val userName = sharedPref.getString("userName", "")
+        val currentTime = SimpleDateFormat("yyyy dd M hh:mm:ss").format(Date())
+
+        //add a comment to DataBase
+        val comment = CommentItem(commentId, userID!!.toInt(), userName, commentString, currentTime)
+        myRefArticles.child(articleId.toString()).child("comments").push().setValue(comment)
+
+        Toast.makeText(activity, "Comment added", Toast.LENGTH_SHORT).show()
+        findNavController().navigate(R.id.action_commentFragment_to_homeFragment)
+    }
+
+    private fun recyclerViewAdaptation() {
+        val commentSize = comments.size
+        val list = fillRecyclerViewWithComments(commentSize)
+        binding.commentRecyclerView.adapter = CommentAdapter(list)
+        binding.commentRecyclerView.layoutManager = LinearLayoutManager(activity)
+        binding.commentRecyclerView.setHasFixedSize(true)
+    }
+
+    private fun fillRecyclerViewWithComments(size: Int): List<CommentItem> {
+        val list = ArrayList<CommentItem>()
+        for (i in 0 until size) {
+            val item = CommentItem(
+                comments[i].commentId,
+                comments[i].ownerId,
+                comments[i].userName,
+                comments[i].commentText,
+                comments[i].timeStamp
+            )
+            list += item
+        }
+        return list
     }
 
     private fun validComment(commentString: String): Boolean {
@@ -73,68 +112,5 @@ class CommentFragment : Fragment() {
         return true
     }
 
-    private fun readCommentsFromDatabase(): List<CommentItem> {
-        val list = ArrayList<CommentItem>()
-        val database = FirebaseDatabase.getInstance()
-        val ref = database.getReference("articles")
-        ref.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (data in dataSnapshot.children) {
-                    //   val comment = CommentItem()
-                   // Log.d("Helo", data.child("comments").value.toString())
-//                    art.title = data.child("title").value.toString()
-//                    art.rating = data.child("currentRating").value.toString()
-//                    art.description = data.child("description").value.toString()
-//                    art.content = data.child("text").value.toString()
-//                    art.date = data.child("date").value.toString()
-//                    val id = data.child("ownerId").value.toString()
-//                    art.comments = data.child("comments").childrenCount
-                    //  list += comment
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
-                Log.w("TAG", "Failed to read value.", error.toException())
-            }
-        })
-        return list
-    }
-
-
-    private fun addCommentToDatabase(commentString: String) {
-        //val commentId = random
-        val commentId = (99..99999).random()
-        val articleId = viewModel.articleId
-        val userID = sharedPref.getString("userId", "")
-        val userName = sharedPref.getString("userName", "")
-        val currentTime = SimpleDateFormat("yyyy dd M hh:mm:ss").format(Date())
-        Log.d("Helo", "articleID : $articleId")
-        Log.d("Helo", "userID : $userID")
-        myRefArticles.child(articleId.toString()).child("comments").child(userID.toString()).child("commentId").setValue(commentId)
-        myRefArticles.child(articleId.toString()).child("comments").child(userID.toString()).child("ownerId").setValue(userID.toString())
-        myRefArticles.child(articleId.toString()).child("comments").child(userID.toString()).child("userName").setValue(userName.toString())
-        myRefArticles.child(articleId.toString()).child("comments").child(userID.toString()).child("commentText").setValue(commentString)
-        myRefArticles.child(articleId.toString()).child("comments").child(userID.toString()).child("timestamp").setValue(currentTime)
-        Toast.makeText(activity, "Comment added", Toast.LENGTH_SHORT).show()
-        findNavController().navigate(R.id.action_commentFragment_to_homeFragment)
-    }
-
-    private fun recyclerViewAdaptation() {
-        //here I need to fill the list
-        val list = generateDummyList(4)
-        binding.commentRecyclerView.adapter = CommentAdapter(list)
-        binding.commentRecyclerView.layoutManager = LinearLayoutManager(activity)
-        binding.commentRecyclerView.setHasFixedSize(true)
-    }
-
-    private fun generateDummyList(size: Int): List<CommentItem> {
-        val list = ArrayList<CommentItem>()
-        for (i in 0 until size) {
-            val item = CommentItem("Username $i", "Date $i", "Nice comment here")
-            list += item
-        }
-        return list
-    }
 }
 

@@ -1,4 +1,10 @@
 package com.example.application.home.models
 
-class CommentItem(var userName: String, var date : String, var text : String) {
+class CommentItem(
+    var commentId: Int,
+    var ownerId: Int,
+    var userName: String?,
+    var commentText: String,
+    var timeStamp: String
+) {
 }
