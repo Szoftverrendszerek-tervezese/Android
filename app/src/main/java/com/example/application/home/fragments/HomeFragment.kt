@@ -59,8 +59,8 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     val art = RecyclerItem()
                     val articleId = data.child("articleId").value.toString().toInt()
                     art.articleId = articleId
-                    viewModel.articleId = articleId
-                    Log.d("Helo", "a home fragmentben a userID : ")
+                    viewModel.articleId.value = articleId
+                    Log.d("Helo", "a home fragmentben a userID : ${viewModel.userId.value}")
 
                     art.title = data.child("title").value.toString()
                     art.rating = data.child("currentRating").value.toString()
