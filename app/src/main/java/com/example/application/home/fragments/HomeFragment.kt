@@ -1,6 +1,5 @@
 package com.example.application.home.fragments
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -24,32 +23,23 @@ import com.google.firebase.database.ValueEventListener
 
 class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
-
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: GeneralViewModel by activityViewModels()
     private lateinit var sharedPref: SharedPreferences
+
+    val database = FirebaseDatabase.getInstance()
+    private val refArticles = database.getReference("articles")
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        sharedPref =
-            context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
-        val uString = sharedPref.getString("userId", "")
-        val uString1 = sharedPref.getString("password", "")
-        Log.d("Helo", "homefragment - useriD - shared pref: $uString")
-        Log.d("Helo", "homefragment - password shared pref: $uString1")
-
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.root
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         val list = ArrayList<RecyclerItem>()
-        val database = FirebaseDatabase.getInstance()
-        val ref = database.getReference("articles")
-
-
-        ref.addValueEventListener(object : ValueEventListener {
+        refArticles.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
                     val art = RecyclerItem()
@@ -79,6 +69,9 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                         }
                     })
                     list.add(art)
+
+                    // this will need for the search fragment
+                    viewModel.articles.add(art)
                 }
 
                 binding.recyclerView.adapter = RecyclerAdapter(list, this@HomeFragment)
@@ -97,7 +90,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     override fun onItemClick(item: RecyclerItem) {
 
         //this is need for the commentsection
-        viewModel.articleId  = item.articleId
+        viewModel.articleId = item.articleId
 
         val bundle = Bundle()
         bundle.putString("title", item.title)
