@@ -69,12 +69,13 @@ class CommentFragment : Fragment() {
         val currentTime = SimpleDateFormat("yyyy dd M hh:mm:ss").format(Date())
 
         //add a comment to DataBase
-        val comment = CommentItem(commentId, userID!!.toInt(), userName, commentString, currentTime)
+        val comment = CommentItem(commentId, commentString, userID!!.toInt(), currentTime, userName)
         myRefArticles.child(articleId.toString()).child("comments").push().setValue(comment)
 
         Toast.makeText(activity, "Comment added", Toast.LENGTH_SHORT).show()
         findNavController().navigate(R.id.action_commentFragment_to_homeFragment)
     }
+
 
     private fun recyclerViewAdaptation() {
         val commentSize = comments.size
@@ -87,12 +88,13 @@ class CommentFragment : Fragment() {
     private fun fillRecyclerViewWithComments(size: Int): List<CommentItem> {
         val list = ArrayList<CommentItem>()
         for (i in 0 until size) {
+            Log.d("Helo", "timestamp: ${comments[i].timeStamp} ")
             val item = CommentItem(
                 comments[i].commentId,
-                comments[i].ownerId,
-                comments[i].userName,
                 comments[i].commentText,
-                comments[i].timeStamp
+                comments[i].ownerId,
+                comments[i].timeStamp,
+                comments[i].userName
             )
             list += item
         }

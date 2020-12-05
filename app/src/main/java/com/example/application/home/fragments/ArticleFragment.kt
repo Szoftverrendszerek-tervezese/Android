@@ -79,10 +79,10 @@ class ArticleFragment : Fragment() {
                         // define the comment object
                         val comment = CommentItem(
                             data.child("commentId").value.toString().toInt(),
-                            data.child("ownerId").value.toString().toInt(),
-                            data.child("userName").value.toString(),
                             data.child("commentText").value.toString(),
-                            data.child("commentId").value.toString()
+                            data.child("ownerId").value.toString().toInt(),
+                            data.child("timeStamp").value.toString(),
+                            data.child("userName").value.toString()
                         )
                         //add to the list
                         commentList += comment
