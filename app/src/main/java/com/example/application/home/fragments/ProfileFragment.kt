@@ -1,6 +1,7 @@
 package com.example.application.home.fragments
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,12 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.application.R
 import com.example.application.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
+    private lateinit var sharedPref: SharedPreferences
+    private lateinit var userID: String
+    private lateinit var email: String
+    private lateinit var username: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,10 +31,25 @@ class ProfileFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
         Log.d("Helo", "Meghivodsz te szaros ? ")
+
+        sharedPref =
+            context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
+        userID = sharedPref.getString("userId", "").toString()
+        email = sharedPref.getString("email", "").toString()
+        username = sharedPref.getString("username", "").toString()
+
+        Log.d("values","userid: $userID email: $email username: $username")
+        Log.d("values","shared: $sharedPref")
+        Log.d("values","shared1: ${sharedPref.all}")
+
+        binding.emailText.text=email
+        binding.usernameText.text=username
+
         binding.signOut.setOnClickListener{
         Log.d("Helo","Clear shared preferences")
             val settings = requireContext().getSharedPreferences("credentials", Context.MODE_PRIVATE)
             settings.edit().clear().apply()
+            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
         }
 
 

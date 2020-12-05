@@ -95,8 +95,9 @@ class RegisterFragment : Fragment() {
             editor.putString("email", user.email)
             editor.putString("password", passwordHash)
             editor.putString("userId", userID.toString())
-            editor.putString("userName", userName)
+            editor.putString("username", userName)
             editor.apply()
+            viewModel.ratedArticles.value= mutableListOf()
             findNavController().navigate(R.id.action_registerFragment2_to_homeFragment)
         }
         return binding.root
