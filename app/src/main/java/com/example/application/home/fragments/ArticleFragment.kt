@@ -7,13 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import com.example.application.R
 import com.example.application.databinding.FragmentArticleBinding
+import com.example.application.home.GeneralViewModel
 
 class ArticleFragment : Fragment() {
 
     private lateinit var binding: FragmentArticleBinding
+    private val viewModel: GeneralViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -24,14 +27,13 @@ class ArticleFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_article, container, false)
         val view = binding.root
 
-        var bundle: Bundle? = this.arguments
-        binding.titleTextView.text = bundle?.getString("title")
-        binding.ratingText.text = bundle?.getString("rating")
-        binding.articleTextView.text = bundle?.getString("content")
-        binding.dateText.text = bundle?.getString("date")
-        binding.authorText.text = bundle?.getString("author")
-        val comment = bundle?.getString("comments")
-        binding.comment.text = "$comment Comments"
+        binding.titleTextView.text = viewModel.currentArticle.value!!.title
+        binding.ratingText.text = viewModel.currentArticle.value!!.rating
+        binding.articleTextView.text = viewModel.currentArticle.value!!.content
+        binding.dateText.text = viewModel.currentArticle.value!!.date
+        binding.authorText.text = viewModel.currentArticle.value!!.author
+
+        binding.comment.text = "${viewModel.currentArticle.value!!.comments} Comments"
 
         binding.rate.setOnClickListener {
             val fm =
@@ -43,7 +45,7 @@ class ArticleFragment : Fragment() {
         //this listener are going to the comment section
         binding.comment.setOnClickListener{
             Navigation.findNavController(view)
-                .navigate(R.id.action_homeFragment_to_commentFragment)
+                .navigate(R.id.action_articleFragment_to_commentFragment)
         }
         return view
     }

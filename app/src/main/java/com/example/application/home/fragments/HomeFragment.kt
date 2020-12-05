@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.application.R
 import com.example.application.databinding.FragmentHomeBinding
@@ -102,18 +103,8 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(item: RecyclerItem) {
-        val bundle = Bundle()
-        bundle.putString("title", item.title)
-        bundle.putString("rating", item.rating)
-        bundle.putString("content", item.content)
-        bundle.putString("date", item.date)
-        bundle.putString("author", item.author)
-        bundle.putString("comments", item.comments.toString())
-
-        val fragment: Fragment = ArticleFragment()
-        fragment.arguments = bundle
-        fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)
-            ?.addToBackStack("tag")?.commit()
+        viewModel.currentArticle.value = item
+        Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_articleFragment)
     }
 
 }
