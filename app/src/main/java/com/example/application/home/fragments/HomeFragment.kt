@@ -21,6 +21,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 
 class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
@@ -39,8 +41,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
             context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
         val uString = sharedPref.getString("userId", "")
         val uString1 = sharedPref.getString("password", "")
-        Log.d("Helo", "uuseriD - shared pref: $uString")
-        Log.d("Helo", "password shared pref: $uString1")
 
         if (uString != null) {
             //viewModel.userId = uString.toInt()
@@ -61,10 +61,11 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     val articleId = data.child("articleId").value.toString().toInt()
                     art.articleId = articleId
                     viewModel.articleId = articleId
-                    Log.d("Helo", "a home fragmentben a userID : ")
 
                     art.title = data.child("title").value.toString()
-                    art.rating = data.child("currentRating").value.toString()
+                    val df =  DecimalFormat("#.##")
+                    df.roundingMode = RoundingMode.CEILING
+                    art.rating = df.format(data.child("currentRating").value.toString().toDouble())
                     art.description = data.child("description").value.toString()
                     art.content = data.child("text").value.toString()
                     art.date = data.child("timestamp").value.toString()
@@ -104,7 +105,8 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
     override fun onItemClick(item: RecyclerItem) {
         viewModel.currentArticle.value = item
-        Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_articleFragment)
+        Navigation.findNavController(binding.root)
+            .navigate(R.id.action_homeFragment_to_articleFragment)
     }
 
 }

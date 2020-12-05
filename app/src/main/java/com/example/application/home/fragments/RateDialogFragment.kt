@@ -7,11 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.example.application.R
-import com.example.application.databinding.FragmentArticleBinding
 import com.example.application.databinding.FragmentRateDialogBinding
 import com.example.application.home.GeneralViewModel
 import com.example.application.home.models.Rating
@@ -19,6 +19,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 
 class RateDialogFragment : DialogFragment() {
@@ -49,9 +51,12 @@ class RateDialogFragment : DialogFragment() {
 
         binding.submitButton.setOnClickListener {
             val rate = binding.ratingBar.rating
-            calculateRating(binding.ratingBar.rating.toDouble())
-            Log.d("value", "the rating is: $rate")
-            dismiss()
+            if (rate == 0F) {
+                Toast.makeText(activity, "Wrong value!", Toast.LENGTH_SHORT).show()
+            } else {
+                calculateRating(binding.ratingBar.rating.toDouble())
+                dismiss()
+            }
         }
 
         return view
@@ -60,12 +65,9 @@ class RateDialogFragment : DialogFragment() {
     private fun calculateRating(rating: Double) {
 
         viewModel.ratingPair.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            Log.d(
-                "rating",
-                "the sum is: ${viewModel.ratingPair.value!!.first} and the counter is: ${viewModel.ratingPair.value!!.second}"
-            )
             updateRating(rating)
             updateUserProfile(rating)
+            viewModel.ratedArticles.value!!.add(viewModel.currentArticle.value!!.articleId.toString())
 
         })
         getRatings()
@@ -110,8 +112,6 @@ class RateDialogFragment : DialogFragment() {
         database.getReference("articles")
             .child(viewModel.currentArticle.value!!.articleId.toString()).child("currentRating")
             .setValue(newRating)
-
-        viewModel.currentArticle.value!!.rating = newRating.toString()
     }
 
     private fun getRatings() {
@@ -126,7 +126,6 @@ class RateDialogFragment : DialogFragment() {
                         for (ratings in article.children) {
                             if (ratings.key.toString() == "ratings") {
                                 for (value in ratings.children) {
-                                    Log.d("rating", "-----the rating is: ${value.child("rating")}")
                                     ratingSum += value.child("rating").value.toString().toDouble()
                                     counter++
                                 }
@@ -137,11 +136,6 @@ class RateDialogFragment : DialogFragment() {
                     }
                 }
                 viewModel.ratingPair.value = Pair(ratingSum, counter)
-                Log.d("rating", "first: $ratingSum second: $counter")
-                Log.d(
-                    "rating",
-                    "firstviewmodel: ${viewModel.ratingPair.value!!.first} secondviewmodel: ${viewModel.ratingPair.value!!.first}"
-                )
             }
 
             override fun onCancelled(error: DatabaseError) {

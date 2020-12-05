@@ -7,7 +7,8 @@
         android:id="@+id/frameLayout3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".home.fragments.RateDialogFailedFragment">
+        tools:context=".home.fragments.RateDialogFailedFragment"
+        android:paddingBottom="15dp">
 
 
         <TextView
@@ -33,10 +34,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rateFailed"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:text="@string/ok"
-            app:backgroundTint="@color/buttonColor"
-            android:layout_marginBottom="10dp"/>
+            app:backgroundTint="@color/buttonColor"/>
 
 
 

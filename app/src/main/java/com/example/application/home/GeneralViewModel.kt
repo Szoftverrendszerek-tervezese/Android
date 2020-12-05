@@ -10,5 +10,5 @@ class GeneralViewModel : ViewModel() {
      var userId : Int = 0
      var currentArticle : MutableLiveData<RecyclerItem> = MutableLiveData<RecyclerItem>()
      var ratingPair: MutableLiveData<Pair<Double,Int>> = MutableLiveData<Pair<Double,Int>>()
-     var hasRated: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+     var ratedArticles: MutableLiveData<MutableList<String>> = MutableLiveData<MutableList<String>>()
 }
