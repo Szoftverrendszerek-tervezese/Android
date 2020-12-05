@@ -1,11 +1,10 @@
-package com.example.application.authentication.login
+package com.example.application.home.fragments
 
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,7 +68,9 @@ class LoginFragment : Fragment() {
                     if (data.child("username").value.toString() == userName && data.child("password").value.toString() == hashedPassword) {
 
                         //for later usages
+
                         viewModel.userId = data.child("userId").value.toString().toInt()
+
 
                         Toast.makeText(activity, "Log in successful", Toast.LENGTH_SHORT).show()
                         sharedPref =

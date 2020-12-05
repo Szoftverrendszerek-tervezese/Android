@@ -40,6 +40,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         val uString1 = sharedPref.getString("password", "")
         Log.d("Helo", "uuseriD - shared pref: $uString")
         Log.d("Helo", "password shared pref: $uString1")
+
         if (uString != null) {
             //viewModel.userId = uString.toInt()
         }
@@ -50,6 +51,8 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         val list = ArrayList<RecyclerItem>()
         val database = FirebaseDatabase.getInstance()
         val ref = database.getReference("articles")
+
+
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {

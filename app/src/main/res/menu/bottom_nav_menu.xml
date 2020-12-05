@@ -13,7 +13,7 @@
         android:title="Home"
         app:showAsAction="always" />
     <item
-        android:id="@+id/accountFragment"
+        android:id="@+id/profileFragment"
         android:icon="@drawable/account_icon"
         android:title="Profile"
         app:showAsAction="always" />

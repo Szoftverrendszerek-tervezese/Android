@@ -4,12 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.application.R
-import com.example.application.authentication.login.LoginFragment
-import com.example.application.authentication.register.RegisterFragment
 import com.example.application.databinding.ActivityHomeBinding
 
 

@@ -1,4 +1,4 @@
-package com.example.application.authentication.register
+package com.example.application.home.fragments
 
 import android.content.Context
 import android.content.Intent
@@ -13,7 +13,9 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.application.R
+import com.example.application.home.models.User
 import com.example.application.databinding.FragmentRegisterBinding
 import com.example.application.home.GeneralViewModel
 import com.example.application.home.HomeActivity
@@ -65,6 +67,8 @@ class RegisterFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        Log.d("Helo", "register")
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
         binding.saveButton.setOnClickListener {
             email = binding.emailEditText.text.toString()
@@ -76,7 +80,12 @@ class RegisterFragment : Fragment() {
             userID = generateID()
             if (!isValidForm(userName, email, password))
                 return@setOnClickListener
-            val user = User(userID, userName, email, passwordHash)
+            val user = User(
+                userID,
+                userName,
+                email,
+                passwordHash
+            )
             writeNewUser(user)
             Toast.makeText(activity, "Registration Success", Toast.LENGTH_SHORT).show()
             sharedPref =
@@ -87,19 +96,28 @@ class RegisterFragment : Fragment() {
             editor.putString("password", passwordHash)
             editor.putString("userId", userID.toString())
             editor.apply()
-            val intent = Intent(activity, HomeActivity::class.java)
-            startActivity(intent)
+            findNavController().navigate(R.id.action_registerFragment2_to_homeFragment)
         }
         return binding.root
     }
 
 
     private fun writeNewUser(user: User) {
+
+        //fill the usersLogin table
         myRef.child("usersLogin").child(user.userID.toString()).child("email").setValue(user.email)
         myRef.child("usersLogin").child(user.userID.toString()).child("password")
             .setValue(user.password)
         myRef.child("usersLogin").child(user.userID.toString()).child("username")
             .setValue(user.userName)
+        myRef.child("usersLogin").child(user.userID.toString()).child("userId")
+            .setValue(user.userID.toString())
+
+    //fill the users  table
+        myRef.child("users").child(user.userID.toString()).child("userId").setValue(user.userID.toString())
+        myRef.child("users").child(user.userID.toString()).child("userName").setValue(user.userName)
+
+
         Log.d("Helo", "end writeNewUser")
     }
 

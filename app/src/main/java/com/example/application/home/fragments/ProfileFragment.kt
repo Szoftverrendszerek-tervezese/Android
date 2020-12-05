@@ -1,4 +1,4 @@
-package com.example.application.home.profile
+package com.example.application.home.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -24,12 +24,11 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
-
+        Log.d("Helo", "Meghivodsz te szaros ? ")
         binding.signOut.setOnClickListener{
         Log.d("Helo","Clear shared preferences")
             val settings = requireContext().getSharedPreferences("credentials", Context.MODE_PRIVATE)
             settings.edit().clear().apply()
-
         }
 
 
