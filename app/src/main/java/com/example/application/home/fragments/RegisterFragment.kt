@@ -125,7 +125,7 @@ class RegisterFragment : Fragment() {
     private fun generateID(): Int {
         Log.d("Helo", "begin generateID")
         val userID = (999999..999999999).random()
-        viewModel.userId.value= userID
+        viewModel.userId= userID
         val usersRef: DatabaseReference = myRef.child("usersLogin")
         usersRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {

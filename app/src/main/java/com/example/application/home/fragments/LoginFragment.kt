@@ -69,7 +69,7 @@ class LoginFragment : Fragment() {
 
                         //for later usages
 
-                        viewModel.userId.value = data.child("userId").value.toString().toInt()
+                        viewModel.userId = data.child("userId").value.toString().toInt()
 
 
                         Toast.makeText(activity, "Log in successful", Toast.LENGTH_SHORT).show()
