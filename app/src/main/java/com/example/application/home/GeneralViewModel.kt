@@ -15,6 +15,6 @@ class GeneralViewModel : ViewModel() {
         MutableLiveData<MutableList<CommentItem>>()
 
     //this I will need for the search fragment
-    var articles: MutableLiveData<MutableList<RecyclerItem>> =
-        MutableLiveData<MutableList<RecyclerItem>>()
+    var articles: MutableList<RecyclerItem> =
+        mutableListOf()
 }

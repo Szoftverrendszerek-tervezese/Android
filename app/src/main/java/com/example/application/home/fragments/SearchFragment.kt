@@ -28,7 +28,7 @@ class SearchFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        articles = viewModel.articles.value!!
+        articles = viewModel.articles
 
     }
 
@@ -38,12 +38,14 @@ class SearchFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         for (i in 0 until articles.size) {
-            articleTitles.plusAssign(articles[i].title)
+            var newString = articles[i].title + " by " + articles[i].author
+            Log.d("Helo", "newstring : $newString")
+            articleTitles.plusAssign(newString)
         }
 
         Log.d("Helo", "size: ${articles.size}")
 
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, articles)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, articleTitles)
         binding.autoComplete.setAdapter(adapter)
 
 

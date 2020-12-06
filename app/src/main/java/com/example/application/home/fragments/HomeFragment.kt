@@ -50,14 +50,17 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     art.description = data.child("description").value.toString()
                     art.content = data.child("text").value.toString()
                     art.date = data.child("timestamp").value.toString()
-                    val id = data.child("ownerId").value.toString()
                     art.comments = data.child("comments").childrenCount
+                    val id = data.child("ownerId").value.toString()
+                    Log.d("Helo", "ownerId: $id")
                     val userRef = database.getReference("users")
                     userRef.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            //check for the userName
                             for (username in dataSnapshot.children) {
                                 if (username.key.toString() == id) {
                                     art.author = username.child("userName").value.toString()
+                                    Log.d("Helo", "article author: ${art.author}")
                                     break;
                                 }
                             }
@@ -69,8 +72,9 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                         }
                     })
                     list.add(art)
+
                     // this will need for the search fragment
-                    viewModel.articles.value!!.add(art)
+                    viewModel.articles.add(art)
                 }
 
                 binding.recyclerView.adapter = RecyclerAdapter(list, this@HomeFragment)
