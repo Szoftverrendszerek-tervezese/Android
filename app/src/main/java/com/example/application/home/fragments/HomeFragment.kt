@@ -1,6 +1,5 @@
 package com.example.application.home.fragments
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -27,10 +26,13 @@ import java.text.DecimalFormat
 
 class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
-
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: GeneralViewModel by activityViewModels()
     private lateinit var sharedPref: SharedPreferences
+
+    val database = FirebaseDatabase.getInstance()
+    private val refArticles = database.getReference("articles")
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,11 +48,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         val view = binding.root
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         val list = ArrayList<RecyclerItem>()
-        val database = FirebaseDatabase.getInstance()
-        val ref = database.getReference("articles")
-
-
-        ref.addValueEventListener(object : ValueEventListener {
+        refArticles.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
                     val art = RecyclerItem()
@@ -63,11 +61,13 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     art.description = data.child("description").value.toString()
                     art.content = data.child("text").value.toString()
                     art.date = data.child("timestamp").value.toString()
-                    val id = data.child("ownerId").value.toString()
                     art.comments = data.child("comments").childrenCount
+                    val id = data.child("ownerId").value.toString()
+                    Log.d("Helo", "ownerId: $id")
                     val userRef = database.getReference("users")
                     userRef.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            //check for the userName
                             for (username in dataSnapshot.children) {
                                 if (username.key.toString() == id) {
                                     art.author = username.child("userName").value.toString()
@@ -82,6 +82,9 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                         }
                     })
                     list.add(art)
+
+                    // this will need for the search fragment
+                    viewModel.articles.add(art)
                 }
 
                 binding.recyclerView.adapter = RecyclerAdapter(list, this@HomeFragment)
@@ -100,7 +103,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     override fun onItemClick(item: RecyclerItem) {
 
         //this is need for the commentsection
-        viewModel.articleId  = item.articleId
+        viewModel.articleId = item.articleId
 
         viewModel.currentArticle.value = item
         Navigation.findNavController(binding.root)
