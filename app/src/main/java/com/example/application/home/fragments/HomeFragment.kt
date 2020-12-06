@@ -29,7 +29,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: GeneralViewModel by activityViewModels()
-    private lateinit var sharedPref: SharedPreferences
 
     val database = FirebaseDatabase.getInstance()
     private val refArticles = database.getReference("articles")
@@ -39,12 +38,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        sharedPref =
-            context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
-        val uString = sharedPref.getString("userId", "")
-        val uString1 = sharedPref.getString("password", "")
-
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.root
         binding.recyclerView.layoutManager = LinearLayoutManager(context)

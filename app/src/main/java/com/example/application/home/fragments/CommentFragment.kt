@@ -43,6 +43,7 @@ class CommentFragment : Fragment() {
         articleId = viewModel.articleId
         sharedPref = context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
         comments = viewModel.comments.value!!
+
     }
 
     override fun onCreateView(
@@ -64,11 +65,13 @@ class CommentFragment : Fragment() {
     private fun addCommentToDatabase(commentString: String) {
         //val commentId = random
         val commentId = (99..99999).random()
-        val userID = sharedPref.getString("userId", "")
-        val userName = sharedPref.getString("userName", "")
+        val userID = sharedPref.getString("userId", "").toString()
+        val userName = sharedPref.getString("username", "").toString()
         val currentTime = SimpleDateFormat("yyyy dd M hh:mm:ss").format(Date())
 
         //add a comment to DataBase
+
+        Log.d("Helo", "username: $userName")
         val comment = CommentItem(commentId, commentString, userID!!.toInt(), currentTime, userName)
         myRefArticles.child(articleId.toString()).child("comments").push().setValue(comment)
 
