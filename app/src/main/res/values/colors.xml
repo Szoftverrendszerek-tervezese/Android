@@ -10,4 +10,5 @@
     <color name="buttonColor">#6FC3D4</color>color>
     <color name="yellow">#F5E725</color>
     <color name="textLink">#FF0099CC</color>
+    <color name="blue">#0000FF</color>
 </resources>
