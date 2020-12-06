@@ -120,7 +120,7 @@ class LoginFragment : Fragment() {
 
     private fun isValidForm(userName: String, password: String): Boolean {
         if (TextUtils.isEmpty(userName)) {
-            binding.usernameInputLayout.error = "UserName is Required"
+            binding.usernameInputLayout.error = "Username is Required"
             return false
         }
 

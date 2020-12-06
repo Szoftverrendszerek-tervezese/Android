@@ -117,7 +117,7 @@ class RegisterFragment : Fragment() {
 
     //fill the users  table
         myRef.child("users").child(user.userID.toString()).child("userId").setValue(user.userID.toString())
-        myRef.child("users").child(user.userID.toString()).child("userName").setValue(user.userName)
+        myRef.child("users").child(user.userID.toString()).child("username").setValue(user.userName)
 
 
         Log.d("Helo", "end writeNewUser")

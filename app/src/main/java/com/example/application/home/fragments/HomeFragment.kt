@@ -71,7 +71,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                             //check for the userName
                             for (username in dataSnapshot.children) {
                                 if (username.key.toString() == id) {
-                                    art.author = username.child("userName").value.toString()
+                                    art.author = username.child("username").value.toString()
                                     break;
                                 }
                             }
