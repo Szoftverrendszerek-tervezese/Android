@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.example.application.R
 import com.example.application.databinding.FragmentSearchBinding
 import com.example.application.home.GeneralViewModel
@@ -54,23 +56,24 @@ class SearchFragment : Fragment() {
                     }
                 }
                 if (newPos == -1) {
-
-
-                    binding.autoComplete.error = "Somethign wrong"
+                    binding.autoComplete.error = "Something wrong"
                 }
 
-                val bundle = Bundle()
-                bundle.putString("title", articles[newPos].title)
-                bundle.putString("rating", articles[newPos].rating)
-                bundle.putString("content", articles[newPos].content)
-                bundle.putString("date", articles[newPos].date)
-                bundle.putString("author", articles[newPos].author)
-                bundle.putString("comments", articles[newPos].comments.toString())
+                val article = RecyclerItem(
+                    articles[newPos].articleId,
+                    articles[newPos].title,
+                    articles[newPos].rating,
+                    articles[newPos].description,
+                    articles[newPos].content,
+                    articles[newPos].date,
+                    articles[newPos].author,
+                    articles[newPos].comments
+                )
+                //this is for the article
+                viewModel.currentArticle.value = article
 
-                val fragment: Fragment = ArticleFragment()
-                fragment.arguments = bundle
-                fragmentManager?.beginTransaction()?.replace(R.id.navHostFragment, fragment)
-                    ?.addToBackStack("tag")?.commit()
+               findNavController().navigate(R.id.action_searchFragment_to_articleFragment)
+
             }
         return binding.root
     }
