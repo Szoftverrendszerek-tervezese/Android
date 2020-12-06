@@ -1,6 +1,7 @@
 package com.example.application.home.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +11,13 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.application.R
 import com.example.application.databinding.FragmentSearchBinding
 import com.example.application.home.GeneralViewModel
 import com.example.application.home.models.RecyclerItem
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class SearchFragment : Fragment() {
@@ -35,6 +37,30 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
+
+        //set the latest article text view in the search screen
+        val latestArticlePosition = getLatestArticle()
+        binding.latestTextView.text =
+            articles[latestArticlePosition].title + " by " + articles[latestArticlePosition].author
+
+        //set the top rated article text view in the search screen
+        val topRatedArticlePosition = getTopRatedArticle()
+        binding.topRatedTextView.text =
+            articles[topRatedArticlePosition].title + " by " + articles[topRatedArticlePosition].author
+
+
+        binding.latestTextView.setOnClickListener {
+            viewModel.currentArticle.value = articles[latestArticlePosition]
+            findNavController().navigate(R.id.action_searchFragment_to_articleFragment)
+        }
+
+        binding.topRatedTextView.setOnClickListener {
+            viewModel.currentArticle.value = articles[topRatedArticlePosition]
+            findNavController().navigate(R.id.action_searchFragment_to_articleFragment)
+        }
+
+
+        //this stringlist will be displayed on the drop down list
         for (i in 0 until articles.size) {
             val newString = articles[i].title + " by " + articles[i].author
             articleTitles.plusAssign(newString)
@@ -72,10 +98,40 @@ class SearchFragment : Fragment() {
                 //this is for the article
                 viewModel.currentArticle.value = article
 
-               findNavController().navigate(R.id.action_searchFragment_to_articleFragment)
+                findNavController().navigate(R.id.action_searchFragment_to_articleFragment)
 
             }
         return binding.root
     }
 
+    private fun getTopRatedArticle(): Int {
+        var position = 0
+        var topRating = articles[0].rating
+        for (i in 0 until articles.size) {
+            if (topRating < articles[i].rating) {
+                position = i
+            }
+        }
+        return position
+    }
+
+
+    private fun getLatestArticle(): Int {
+        var position = 0
+
+        //initialize the date format
+        val format = SimpleDateFormat("yyyy. MM. dd. HH:mm")
+
+        //initialize the dates for comparison
+        val latestDate: Date? = format.parse(articles[0].date)
+        var date: Date?
+
+        for (i in 1 until articles.size) {
+            date = format.parse(articles[i].date)
+            if (date?.after(latestDate)!!) {
+                position = i
+            }
+        }
+        return position
+    }
 }
