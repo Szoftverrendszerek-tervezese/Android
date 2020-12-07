@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
@@ -36,6 +37,7 @@ class CommentFragment : Fragment() {
     private var comments: MutableList<CommentItem> = mutableListOf()
     private lateinit var binding: FragmentCommentBinding
     private var articleId by Delegates.notNull<Int>()
+    private lateinit var commentList: List<CommentItem>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +46,8 @@ class CommentFragment : Fragment() {
         sharedPref = context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
         comments = viewModel.comments.value!!
         requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
+        commentList = fillRecyclerViewWithComments(comments.size)
+
     }
 
     override fun onCreateView(
@@ -58,6 +62,8 @@ class CommentFragment : Fragment() {
                 return@setOnClickListener
             }
             addCommentToDatabase(commentString)
+            var inputManager : InputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(view?.windowToken,0)
         }
         return binding.root
     }
@@ -74,16 +80,20 @@ class CommentFragment : Fragment() {
         Log.d("Helo", "username: $userName")
         val comment = CommentItem(commentId, commentString, userID!!.toInt(), currentTime, userName)
         myRefArticles.child(articleId.toString()).child("comments").push().setValue(comment)
-
         Toast.makeText(activity, "Comment added", Toast.LENGTH_SHORT).show()
-        findNavController().navigate(R.id.action_commentFragment_to_homeFragment)
+        commentList += comment
+        Log.d("comment","comment: ${commentList}")
+        binding.commentEditText.text.clear()
+        recyclerViewAdaptation()
+        //findNavController().navigate(R.id.action_commentFragment_to_homeFragment)
     }
 
 
     private fun recyclerViewAdaptation() {
-        val commentSize = comments.size
-        val list = fillRecyclerViewWithComments(commentSize)
-        binding.commentRecyclerView.adapter = CommentAdapter(list)
+//        val commentSize = comments.size
+//        val list = fillRecyclerViewWithComments(commentSize)
+//        binding.commentRecyclerView.adapter = CommentAdapter(list)
+        binding.commentRecyclerView.adapter = CommentAdapter(commentList)
         binding.commentRecyclerView.layoutManager = LinearLayoutManager(activity)
         binding.commentRecyclerView.setHasFixedSize(true)
     }

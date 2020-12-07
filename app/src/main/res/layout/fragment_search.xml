@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
         tools:context=".home.fragments.SearchFragment">
@@ -12,9 +14,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="64dp"
-            android:text="Let's discover some interesting article "
+            android:layout_marginTop="20dp"
+            android:text="@string/let_s_discover_some_interesting_article"
             android:textSize="28sp"
             android:textStyle="bold" />
 
@@ -22,18 +23,17 @@
             android:id="@+id/autoComplete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="25dp"
             android:completionThreshold="1"
-            android:hint="Search for a course ... " />
+            android:hint="@string/search_for_a_course" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="64dp"
-            android:text="What's new? "
+            android:layout_marginTop="40dp"
+            android:text="@string/what_s_new"
             android:textSize="28sp"
             android:textStyle="bold" />
 
@@ -41,17 +41,17 @@
             android:id="@+id/latestTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
             android:text="The latest article"
             android:textColor="@color/blue"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_marginStart="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="40dp"
             android:text="Top rated article "
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -60,10 +60,12 @@
             android:id="@+id/topRatedTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="32dp"
-            android:text="The top rated article"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/the_top_rated_article"
             android:textColor="@color/blue"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_marginStart="15dp" />
     </LinearLayout>
+    </ScrollView>
 </layout>
