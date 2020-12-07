@@ -38,6 +38,7 @@ class ArticleFragment : Fragment() {
         Log.d("Helo", "articlefragment - oncreate")
         articleId = viewModel.articleId
         viewModel.comments.value = readCommentsFromDatabase()
+        requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
     }
 
     override fun onCreateView(

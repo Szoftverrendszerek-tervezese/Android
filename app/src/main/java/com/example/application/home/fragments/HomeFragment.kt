@@ -38,6 +38,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.root
         binding.recyclerView.layoutManager = LinearLayoutManager(context)

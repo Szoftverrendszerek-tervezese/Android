@@ -43,7 +43,7 @@ class CommentFragment : Fragment() {
         articleId = viewModel.articleId
         sharedPref = context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
         comments = viewModel.comments.value!!
-
+        requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
     }
 
     override fun onCreateView(

@@ -43,7 +43,7 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.GONE
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
         binding.loginButton.setOnClickListener {
             userName = binding.usernameInputLayout.editText?.text.toString()

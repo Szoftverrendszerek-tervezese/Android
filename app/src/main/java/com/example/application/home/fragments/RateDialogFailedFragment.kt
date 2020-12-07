@@ -19,6 +19,7 @@ class RateDialogFailedFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.GONE
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_rate_dialog_failed, container, false)
         val view = binding.root
 

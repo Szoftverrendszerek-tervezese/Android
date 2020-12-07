@@ -44,6 +44,7 @@ class RegisterFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getAllUsername(userNames, emails)
+        requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.GONE
     }
 
     private fun getAllUsername(userNames: MutableList<String>, emails: MutableList<String>) {
@@ -70,6 +71,11 @@ class RegisterFragment : Fragment() {
 
         Log.d("Helo", "register")
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
+
+        binding.goToLoginTextView.setOnClickListener{
+            findNavController().navigate(R.id.action_registerFragment2_to_loginFragment)
+        }
+
         binding.saveButton.setOnClickListener {
             email = binding.emailEditText.text.toString()
             userName = binding.userNameEditText.text.toString()
