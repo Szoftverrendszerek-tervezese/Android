@@ -15,7 +15,8 @@
             android:layout_height="wrap_content"
             android:padding="7dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/light">
 
             <TextView
                 android:id="@+id/rateTitle"

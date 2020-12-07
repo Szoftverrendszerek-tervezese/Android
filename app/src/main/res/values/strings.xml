@@ -25,4 +25,12 @@
     <string name="user_icon">user icon</string>
     <string name="you_have_already_rated_this_article">You have already rated this article!</string>
     <string name="ok">OK</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="add_a_comment">Add a Comment ...</string>
+    <string name="your_comment">Your comment ...</string>
+    <string name="let_s_discover_some_interesting_article">Let\'s discover some interesting article</string>
+    <string name="search_for_a_course">Search for a course ...</string>
+    <string name="what_s_new">What\'s new?</string>
+    <string name="the_top_rated_article">The top rated article</string>
 </resources>
