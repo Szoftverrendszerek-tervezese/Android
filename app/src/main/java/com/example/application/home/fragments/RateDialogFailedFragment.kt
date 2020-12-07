@@ -15,11 +15,15 @@ class RateDialogFailedFragment : DialogFragment() {
 
     private lateinit var binding: FragmentRateDialogFailedBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.GONE
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_rate_dialog_failed, container, false)
         val view = binding.root
 
