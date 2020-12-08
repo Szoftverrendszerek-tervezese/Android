@@ -19,7 +19,10 @@ import com.example.application.R
 import com.example.application.databinding.FragmentCommentBinding
 import com.example.application.home.GeneralViewModel
 import com.example.application.home.adapters.CommentAdapter
+import com.example.application.home.models.Activities
+import com.example.application.home.models.ArticleAct
 import com.example.application.home.models.CommentItem
+import com.example.application.home.models.UserAct
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.*
@@ -86,6 +89,21 @@ class CommentFragment : Fragment() {
         binding.commentEditText.text.clear()
         recyclerViewAdaptation()
         //findNavController().navigate(R.id.action_commentFragment_to_homeFragment)
+
+        // add to activity
+        val ref = database.getReference("users")
+        val activityId = (999999..999999999).random()
+        ref.child(userID).child("activities").child(activityId.toString()).setValue(
+            Activities(
+                activityId,
+                "comment",
+                UserAct(userID,userName),
+                ArticleAct(
+                    viewModel.currentArticle.value!!.articleId.toString(),
+                    viewModel.currentArticle.value!!.title
+                )
+            )
+        )
     }
 
 
