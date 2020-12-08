@@ -15,11 +15,10 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/logo"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/usernameInputLayout"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -34,9 +33,9 @@
             app:boxCornerRadiusBottomStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
+            app:layout_constraintBottom_toTopOf="@id/passwordInputLayout"
             app:layout_constraintEnd_toEndOf="@id/passwordInputLayout"
             app:layout_constraintStart_toStartOf="@id/passwordInputLayout"
-            app:layout_constraintBottom_toTopOf="@id/passwordInputLayout"
             app:startIconDrawable="@drawable/user_icon">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -59,10 +58,11 @@
             app:boxCornerRadiusBottomStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:passwordToggleEnabled="true"
             app:startIconDrawable="@drawable/password_icon">
 
             <com.google.android.material.textfield.TextInputEditText
