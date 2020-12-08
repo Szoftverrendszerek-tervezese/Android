@@ -114,7 +114,7 @@ class RegisterFragment : Fragment() {
 
         //fill the usersLogin table
         myRef.child("usersLogin").child(user.userID.toString()).child("email").setValue(user.email)
-        myRef.child("usersLogin").child(user.userID.toString()).child("password")
+        myRef.child("usersLogin").child(user.userID.toString()).child("passwordHash")
             .setValue(user.password)
         myRef.child("usersLogin").child(user.userID.toString()).child("username")
             .setValue(user.userName)

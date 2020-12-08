@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.example.application.R
 import com.example.application.databinding.FragmentLoginBinding
 import com.example.application.home.GeneralViewModel
@@ -34,8 +35,6 @@ class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private lateinit var userName: String
     private lateinit var password: String
-    private var myRef = Firebase.database.reference
-    private lateinit var sharedPref: SharedPreferences
     private val viewModel: GeneralViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -45,76 +44,38 @@ class LoginFragment : Fragment() {
     ): View? {
         requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.GONE
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
+
         binding.loginButton.setOnClickListener {
             userName = binding.usernameInputLayout.editText?.text.toString()
             password = binding.passwordInputLayout.editText?.text.toString()
+
             if (!isValidForm(userName, password)) {
                 return@setOnClickListener
             }
 
-            if (!checkUserInDataBase(userName, password)) {
+            if (viewModel.userCredentials.value!!.contains(
+                    Pair(
+                        userName,
+                        password.toMd5()
+                    )
+                )
+            ) {
+                Toast.makeText(activity, "Login successful", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+            } else {
                 Toast.makeText(activity, "Wrong credentials", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
         }
         return binding.root
-    }
-
-    private fun checkUserInDataBase(userName: String, password: String): Boolean {
-        val hashedPassword = password.toMd5()
-        val usersRef: DatabaseReference = myRef.child("usersLogin")
-        var isCorrect = false
-        usersRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (data in dataSnapshot.children) {
-                    // if the credentials are correct
-                    if (data.child("username").value.toString() == userName && data.child("password").value.toString() == hashedPassword) {
-
-                        //for later usages
-
-                        viewModel.userId = data.child("userId").value.toString().toInt()
-
-
-                        Toast.makeText(activity, "Log in successful", Toast.LENGTH_SHORT).show()
-                        sharedPref =
-                            context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
-                        var editor = sharedPref.edit()
-                        editor.clear()
-                        editor.putString("email", data.child("email").value.toString())
-                        editor.putString("password", hashedPassword)
-                        editor.putString("userId", data.child("userId").value.toString())
-                        editor.putString("username",data.child("username").value.toString())
-                        Log.d("values",editor.toString())
-                        Log.d("values",data.child("username").value.toString())
-                        editor.apply()
-                        Log.d("values",sharedPref.getString("username","").toString())
-
-
-                        val intent = Intent(activity, HomeActivity::class.java)
-                        startActivity(intent)
-                        isCorrect = true
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("The read failed: " + databaseError.code)
-            }
-        })
-        return isCorrect
     }
 
 
     //this method is only used for going to register Fragment.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            // do nothing
-        }
-
         binding.signupButton.setOnClickListener {
-            Navigation.findNavController(view)
-                .navigate(R.id.action_loginFragment_to_registerFragment2)
+            findNavController().navigate(R.id.action_loginFragment_to_registerFragment2)
         }
     }
 
