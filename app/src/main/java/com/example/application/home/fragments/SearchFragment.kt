@@ -24,48 +24,48 @@ class SearchFragment : Fragment() {
 
     private lateinit var binding: FragmentSearchBinding
     private val viewModel: GeneralViewModel by activityViewModels()
-    private lateinit var articles: MutableList<RecyclerItem>
     private var articleTitles: MutableList<String> = mutableListOf()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        articles = viewModel.articles
-        requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
+        Log.d("Helo", "oncreateview - search")
+
 
         //set the latest article text view in the search screen
         val latestArticlePosition = getLatestArticle()
         binding.latestTextView.text =
-            articles[latestArticlePosition].title + " by " + articles[latestArticlePosition].author
+            viewModel.articles[latestArticlePosition].title + " by " + viewModel.articles[latestArticlePosition].author
 
         //set the top rated article text view in the search screen
         val topRatedArticlePosition = getTopRatedArticle()
         binding.topRatedTextView.text =
-            articles[topRatedArticlePosition].title + " by " + articles[topRatedArticlePosition].author
+            viewModel.articles[topRatedArticlePosition].title + " by " + viewModel.articles[topRatedArticlePosition].author
 
 
         binding.latestTextView.setOnClickListener {
-            viewModel.currentArticle.value = articles[latestArticlePosition]
+            viewModel.currentArticle.value = viewModel.articles[latestArticlePosition]
             findNavController().navigate(R.id.action_searchFragment_to_articleFragment)
         }
 
         binding.topRatedTextView.setOnClickListener {
-            viewModel.currentArticle.value = articles[topRatedArticlePosition]
+            viewModel.currentArticle.value = viewModel.articles[topRatedArticlePosition]
             findNavController().navigate(R.id.action_searchFragment_to_articleFragment)
         }
 
 
         //this stringlist will be displayed on the drop down list
-        for (i in 0 until articles.size) {
-            val newString = articles[i].title + " by " + articles[i].author
+        for (i in 0 until viewModel.articles.size) {
+            val newString = viewModel.articles[i].title + " by " + viewModel.articles[i].author
             articleTitles.plusAssign(newString)
         }
+
+
+        Log.d("Helo", "articleTitles: ${articleTitles.size}")
+        Log.d("Helo", "articles: $viewModel.articles")
 
         val adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, articleTitles)
@@ -76,7 +76,7 @@ class SearchFragment : Fragment() {
                 var newPos = -1
                 view as TextView
                 val text = view.text.toString()
-                for (i in 0 until articles.size) {
+                for (i in 0 until viewModel.articles.size) {
                     if (articleTitles[i] == text) {
                         newPos = i
                         break
@@ -87,14 +87,14 @@ class SearchFragment : Fragment() {
                 }
 
                 val article = RecyclerItem(
-                    articles[newPos].articleId,
-                    articles[newPos].title,
-                    articles[newPos].rating,
-                    articles[newPos].description,
-                    articles[newPos].content,
-                    articles[newPos].date,
-                    articles[newPos].author,
-                    articles[newPos].comments
+                    viewModel.articles[newPos].articleId,
+                    viewModel.articles[newPos].title,
+                    viewModel.articles[newPos].rating,
+                    viewModel.articles[newPos].description,
+                    viewModel.articles[newPos].content,
+                    viewModel.articles[newPos].date,
+                    viewModel.articles[newPos].author,
+                    viewModel.articles[newPos].comments
                 )
                 //this is for the article
                 viewModel.currentArticle.value = article
@@ -107,9 +107,9 @@ class SearchFragment : Fragment() {
 
     private fun getTopRatedArticle(): Int {
         var position = 0
-        var topRating = articles[0].rating
-        for (i in 0 until articles.size) {
-            if (topRating < articles[i].rating) {
+        var topRating = viewModel.articles[0].rating
+        for (i in 0 until viewModel.articles.size) {
+            if (topRating < viewModel.articles[i].rating) {
                 position = i
             }
         }
@@ -124,11 +124,11 @@ class SearchFragment : Fragment() {
         val format = SimpleDateFormat("yyyy. MM. dd. HH:mm")
 
         //initialize the dates for comparison
-        val latestDate: Date? = format.parse(articles[0].date)
+        val latestDate: Date? = format.parse(viewModel.articles[0].date)
         var date: Date?
 
-        for (i in 1 until articles.size) {
-            date = format.parse(articles[i].date)
+        for (i in 1 until viewModel.articles.size) {
+            date = format.parse(viewModel.articles[i].date)
             if (date?.after(latestDate)!!) {
                 position = i
             }

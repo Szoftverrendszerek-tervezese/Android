@@ -50,7 +50,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     val articleId = data.child("articleId").value.toString().toInt()
                     art.articleId = articleId
                     art.title = data.child("title").value.toString()
-                    val df =  DecimalFormat("#.##")
+                    val df = DecimalFormat("#.##")
                     df.roundingMode = RoundingMode.CEILING
                     art.rating = df.format(data.child("currentRating").value.toString().toDouble())
                     art.description = data.child("description").value.toString()
@@ -58,7 +58,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     art.date = data.child("timestamp").value.toString()
                     art.comments = data.child("comments").childrenCount
                     val id = data.child("ownerId").value.toString()
-                    Log.d("Helo", "ownerId: $id")
                     val userRef = database.getReference("users")
                     userRef.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -77,11 +76,8 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                         }
                     })
                     list.add(art)
-
-                    // this will need for the search fragment
-                    viewModel.articles.add(art)
                 }
-
+                viewModel.articles = list
                 binding.recyclerView.adapter = RecyclerAdapter(list, this@HomeFragment)
 
             }
