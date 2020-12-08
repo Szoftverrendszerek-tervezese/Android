@@ -40,7 +40,7 @@ class RegisterFragment : Fragment() {
     private var userNames: MutableList<String> = mutableListOf()
     private var emails: MutableList<String> = mutableListOf()
     private lateinit var sharedPref: SharedPreferences
-    private val viewModel : GeneralViewModel by activityViewModels()
+    private val viewModel: GeneralViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getAllUsername(userNames, emails)
@@ -72,7 +72,7 @@ class RegisterFragment : Fragment() {
         Log.d("Helo", "register")
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
 
-        binding.goToLoginTextView.setOnClickListener{
+        binding.goToLoginTextView.setOnClickListener {
             findNavController().navigate(R.id.action_registerFragment2_to_loginFragment)
         }
 
@@ -103,7 +103,7 @@ class RegisterFragment : Fragment() {
             editor.putString("userId", userID.toString())
             editor.putString("username", userName)
             editor.apply()
-            viewModel.ratedArticles.value= mutableListOf()
+            viewModel.ratedArticles.value = mutableListOf()
             findNavController().navigate(R.id.action_registerFragment2_to_homeFragment)
         }
         return binding.root
@@ -121,8 +121,10 @@ class RegisterFragment : Fragment() {
         myRef.child("usersLogin").child(user.userID.toString()).child("userId")
             .setValue(user.userID.toString())
 
-    //fill the users  table
-        myRef.child("users").child(user.userID.toString()).child("userId").setValue(user.userID.toString())
+        //fill the users  table
+
+        myRef.child("users").child(user.userID.toString()).child("userId")
+            .setValue(user.userID.toString())
         myRef.child("users").child(user.userID.toString()).child("username").setValue(user.userName)
 
 
@@ -132,8 +134,10 @@ class RegisterFragment : Fragment() {
     private fun generateID(): Int {
         Log.d("Helo", "begin generateID")
         val userID = (999999..999999999).random()
-        viewModel.userId= userID
+        viewModel.userId = userID
         val usersRef: DatabaseReference = myRef.child("usersLogin")
+
+
         usersRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
@@ -148,6 +152,8 @@ class RegisterFragment : Fragment() {
                 println("The read failed: " + databaseError.code)
             }
         })
+
+
         return userID
     }
 
@@ -200,7 +206,6 @@ class RegisterFragment : Fragment() {
 
         return true
     }
-
 
 
     private fun isValid(email: String): Boolean {

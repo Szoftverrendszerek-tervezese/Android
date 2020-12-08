@@ -4,7 +4,7 @@ class CommentItem(
     var commentId: Int,
     var commentText: String,
     var ownerId: Int,
-    var timeStamp: String,
-    var userName: String?
+    var timestamp: String,
+    var username: String?
 ) {
 }
