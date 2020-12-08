@@ -29,8 +29,8 @@ class CommentAdapter(private val itemList: List<CommentItem>) :
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val currentItem = itemList[position]
-        holder.userName.text = currentItem.userName
-        holder.date.text = currentItem.timeStamp
+        holder.userName.text = currentItem.username
+        holder.date.text = currentItem.timestamp
         holder.text.text = currentItem.commentText
     }
 }

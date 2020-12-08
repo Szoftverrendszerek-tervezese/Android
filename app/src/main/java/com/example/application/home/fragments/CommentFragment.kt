@@ -119,13 +119,13 @@ class CommentFragment : Fragment() {
     private fun fillRecyclerViewWithComments(size: Int): List<CommentItem> {
         val list = ArrayList<CommentItem>()
         for (i in 0 until size) {
-            Log.d("Helo", "timestamp: ${comments[i].timeStamp} ")
+            Log.d("Helo", "timestamp: ${comments[i].timestamp} ")
             val item = CommentItem(
                 comments[i].commentId,
                 comments[i].commentText,
                 comments[i].ownerId,
-                comments[i].timeStamp,
-                comments[i].userName
+                comments[i].timestamp,
+                comments[i].username
             )
             list += item
         }

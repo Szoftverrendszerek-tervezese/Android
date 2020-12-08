@@ -93,8 +93,8 @@ class ArticleFragment : Fragment() {
                             data.child("commentId").value.toString().toInt(),
                             data.child("commentText").value.toString(),
                             data.child("ownerId").value.toString().toInt(),
-                            data.child("timeStamp").value.toString(),
-                            data.child("userName").value.toString()
+                            data.child("timestamp").value.toString(),
+                            data.child("username").value.toString()
                         )
                         //add to the list
                         commentList += comment
