@@ -20,4 +20,7 @@ class GeneralViewModel : ViewModel() {
     //this I will need for the search fragment
     var articles: MutableList<RecyclerItem> =
         mutableListOf()
+
+
+    var userCredentials : MutableLiveData<MutableList<Pair<String,String>>> = MutableLiveData()
 }

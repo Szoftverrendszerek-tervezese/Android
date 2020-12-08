@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.application.R
 import com.example.application.databinding.FragmentSplashBinding
@@ -24,7 +25,8 @@ class SplashFragment : Fragment() {
     private lateinit var binding: FragmentSplashBinding
     private lateinit var userID: String
     private val viewModel: GeneralViewModel by activityViewModels()
-
+    private val database = FirebaseDatabase.getInstance()
+    private val refUsers = database.getReference("usersLogin")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,27 +41,44 @@ class SplashFragment : Fragment() {
 
         loadRatingList()
 
-        if (credentials.isEmpty()) {
-            Log.d("Helo", "empty")
-            findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
-        } else if (credentials.containsKey("email") && credentials.containsKey("password")) {
-            Log.d("Helo", "go to home")
-            findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
-        }
 
-//        Timer().schedule(object : TimerTask() {
-//            override fun run() {
-//
-//            }
-//        }, 2000)
+        viewModel.userCredentials.observe(viewLifecycleOwner, Observer {
+            if (credentials.isEmpty()) {
+                Log.d("Helo", "empty")
+                findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+            } else if (credentials.containsKey("email") && credentials.containsKey("password")) {
+                Log.d("Helo", "go to home")
+                findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+            }
+        })
 
+        loadUserCredentials()
         return binding.root
     }
 
+    private fun loadUserCredentials() {
+        val pairList = mutableListOf<Pair<String,String>>()
+        refUsers.addValueEventListener(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (user in snapshot.children){
+                    val credentialPair = Pair(user.child("username").value.toString(), user.child("passwordHash").value.toString())
+                   // Log.d("Helo", "CredentialPair: $credentialPair")
+                    pairList+=credentialPair
+                }
+                viewModel.userCredentials.value= pairList
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("Helo", "oncancelled")
+            }
+
+
+        })
+    }
+
     private fun loadRatingList() {
-        val database = FirebaseDatabase.getInstance()
-        val ref = database.getReference("users").child(userID).child("ratedArticles")
-        ref.addValueEventListener(object : ValueEventListener {
+        val refRatedArticles = database.getReference("users").child(userID).child("ratedArticles")
+        refRatedArticles.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val ratingList = mutableListOf<String>()
                 for (ratings in snapshot.children) {
@@ -67,7 +86,6 @@ class SplashFragment : Fragment() {
                 }
                 viewModel.ratedArticles.value = ratingList
             }
-
             override fun onCancelled(error: DatabaseError) {
                 Log.w("TAG", "Failed to read value.", error.toException())
             }
