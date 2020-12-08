@@ -20,10 +20,7 @@ import com.example.application.R
 import com.example.application.databinding.FragmentLoginBinding
 import com.example.application.home.GeneralViewModel
 import com.example.application.home.HomeActivity
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.math.BigInteger
@@ -36,6 +33,7 @@ class LoginFragment : Fragment() {
     private lateinit var userName: String
     private lateinit var password: String
     private val viewModel: GeneralViewModel by activityViewModels()
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +42,8 @@ class LoginFragment : Fragment() {
     ): View? {
         requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.GONE
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
+
+
 
         binding.loginButton.setOnClickListener {
             userName = binding.usernameInputLayout.editText?.text.toString()
@@ -61,6 +61,8 @@ class LoginFragment : Fragment() {
                 )
             ) {
                 Toast.makeText(activity, "Login successful", Toast.LENGTH_SHORT).show()
+                getDatas()
+
                 findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
             } else {
                 Toast.makeText(activity, "Wrong credentials", Toast.LENGTH_SHORT).show()
@@ -70,6 +72,33 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
+    private fun getDatas() {
+        val database = FirebaseDatabase.getInstance()
+        val ref = database.getReference("usersLogin")
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (user in dataSnapshot.children) {
+                    if (user.child("username").value.toString() == userName) {
+                        sharedPref =
+                            context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
+                        var editor = sharedPref.edit()
+                        editor.clear()
+                        editor.putString("email", user.child("email").value.toString())
+                        editor.putString("password", password.toMd5())
+                        editor.putString("userId", user.child("userId").value.toString())
+                        editor.putString("username", userName)
+                        editor.apply()
+                    }
+                }
+            }
+
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("TAG", "Failed to read value.", error.toException())
+            }
+        })
+    }
 
     //this method is only used for going to register Fragment.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
