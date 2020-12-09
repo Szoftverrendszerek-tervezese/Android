@@ -1,7 +1,5 @@
 package com.example.application.home.fragments
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -92,7 +90,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(item: RecyclerItem) {
-
         //this is need for the commentsection
         viewModel.articleId = item.articleId
 

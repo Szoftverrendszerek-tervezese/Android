@@ -22,6 +22,6 @@ class GeneralViewModel : ViewModel() {
     var articles: MutableList<RecyclerItem> =
         mutableListOf()
 
-
     var userCredentials: MutableLiveData<MutableList<Pair<String, String>>> = MutableLiveData()
+
 }
