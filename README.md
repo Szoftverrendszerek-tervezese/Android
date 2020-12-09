@@ -5,5 +5,7 @@ Projektünk, a "Cross Platform learning environment" egy tudásmegosztó oldal A
 
 Repository felépítése:
 
-src: a source kód
-docs: a software dokumentációja 
+
+docs: ez tartalmazza a dokumentációt 
+
+a repository többi része pedig a forráskódot
