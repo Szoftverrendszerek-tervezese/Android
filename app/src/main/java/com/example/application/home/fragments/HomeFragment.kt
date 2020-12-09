@@ -94,7 +94,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(item: RecyclerItem) {
-
         //this is need for the commentsection
         viewModel.articleId = item.articleId
         viewModel.currentArticle.value = item

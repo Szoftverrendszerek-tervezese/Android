@@ -1,5 +1,6 @@
 package com.example.application.home.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import com.example.application.R
@@ -34,13 +36,13 @@ class ArticleFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    // i will need this for comment section
-        Log.d("Helo", "articlefragment - oncreate")
+        // i will need this for comment section
         articleId = viewModel.articleId
         viewModel.comments.value = readCommentsFromDatabase()
         requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,12 +62,13 @@ class ArticleFragment : Fragment() {
 
         binding.comment.text = "${viewModel.currentArticle.value!!.comments} Comments"
 
+        getRatings()
         binding.rate.setOnClickListener {
 
             if (viewModel.ratedArticles.value!!.contains(viewModel.currentArticle.value!!.articleId.toString())) {
                 RateDialogFailedFragment().show(parentFragmentManager, "")
             } else {
-                RateDialogFragment().show(parentFragmentManager, "")
+                RateDialogFragment().show(parentFragmentManager, "ArticleFragment")
             }
 
         }
@@ -80,8 +83,7 @@ class ArticleFragment : Fragment() {
     }
 
 
-
-    private fun readCommentsFromDatabase() :MutableList<CommentItem>{
+    private fun readCommentsFromDatabase(): MutableList<CommentItem> {
         val commentList = mutableListOf<CommentItem>()
         //reference for the current article
         myRefArticles.child(articleId.toString()).child("comments")
@@ -109,5 +111,30 @@ class ArticleFragment : Fragment() {
             })
 
         return commentList
+    }
+
+    private fun getRatings() {
+        val database = FirebaseDatabase.getInstance()
+        val ref = database.getReference("articles")
+            .child(viewModel.currentArticle.value!!.articleId.toString()).child("ratings")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var ratingSum = 0.0
+                var counter = 0
+                for (rating in dataSnapshot.children) {
+                    ratingSum += rating.child("rating").value.toString().toDouble()
+                    counter++
+                }
+                viewModel.ratingPair.value = Pair(ratingSum, counter)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("TAG", "Failed to read value.", error.toException())
+            }
+
+
+        })
+
     }
 }

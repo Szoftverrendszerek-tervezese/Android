@@ -3,7 +3,6 @@ package com.example.application.home.fragments
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +18,6 @@ import com.example.application.home.models.ArticleAct
 import com.example.application.home.models.Rating
 import com.example.application.home.models.UserAct
 import com.google.firebase.database.*
-import java.math.RoundingMode
-import java.text.DecimalFormat
 
 
 class RateDialogFragment : DialogFragment() {
@@ -46,7 +43,6 @@ class RateDialogFragment : DialogFragment() {
             context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
         userID = sharedPref.getString("userId", "").toString()
         username = sharedPref.getString("username", "").toString()
-
         binding.notButton.setOnClickListener {
             dismiss()
         }
@@ -65,15 +61,28 @@ class RateDialogFragment : DialogFragment() {
     }
 
     private fun calculateRating(rating: Double) {
+        updateRating(rating)
+        updateUserProfile(rating)
+        updateActivity()
+        viewModel.ratedArticles.value!!.add(viewModel.currentArticle.value!!.articleId.toString())
 
-        viewModel.ratingPair.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            updateRating(rating)
-            updateUserProfile(rating)
-            viewModel.ratedArticles.value!!.add(viewModel.currentArticle.value!!.articleId.toString())
+    }
 
-        })
-        getRatings()
-
+    private fun updateActivity() {
+        val database = FirebaseDatabase.getInstance()
+        val ref = database.getReference("users")
+        val activityId = (999999..999999999).random()
+        ref.child(userID).child("activities").child(activityId.toString()).setValue(
+            Activities(
+                activityId,
+                "rate",
+                UserAct(userID, username),
+                ArticleAct(
+                    viewModel.currentArticle.value!!.articleId.toString(),
+                    viewModel.currentArticle.value!!.title
+                )
+            )
+        )
     }
 
     private fun updateUserProfile(rating: Double) {
@@ -82,19 +91,6 @@ class RateDialogFragment : DialogFragment() {
         ref.child(userID).child("ratedArticles")
             .child(viewModel.currentArticle.value!!.articleId.toString())
             .child("rating").setValue(rating)
-
-        val activityId = (999999..999999999).random()
-        ref.child(userID).child("activities").child(activityId.toString()).setValue(
-            Activities(
-                activityId,
-                "rate",
-                UserAct(userID,username),
-                ArticleAct(
-                    viewModel.currentArticle.value!!.articleId.toString(),
-                    viewModel.currentArticle.value!!.title
-                )
-            )
-        )
     }
 
 
@@ -116,29 +112,5 @@ class RateDialogFragment : DialogFragment() {
             .setValue(newRating)
     }
 
-    private fun getRatings() {
-        val database = FirebaseDatabase.getInstance()
-        val ref = database.getReference("articles").child(viewModel.currentArticle.value!!.articleId.toString()).child("ratings")
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                var ratingSum = 0.0
-                var counter = 0
-                for (rating in dataSnapshot.children) {
-                    ratingSum += rating.child("rating").value.toString().toDouble()
-                    counter++
-                }
-                viewModel.ratingPair.value = Pair(ratingSum, counter)
-                Log.d("get","getRating ratingpair")
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
-                Log.w("TAG", "Failed to read value.", error.toException())
-            }
-
-
-        })
-
-    }
 
 }
