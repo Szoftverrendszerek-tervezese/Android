@@ -43,7 +43,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         val view = binding.root
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         val list = ArrayList<RecyclerItem>()
-        refArticles.addValueEventListener(object : ValueEventListener {
+        refArticles.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
                     val art = RecyclerItem()
@@ -59,7 +59,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     art.comments = data.child("comments").childrenCount
                     val id = data.child("ownerId").value.toString()
                     val userRef = database.getReference("users")
-                    userRef.addValueEventListener(object : ValueEventListener {
+                    userRef.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             //check for the userName
                             for (username in dataSnapshot.children) {

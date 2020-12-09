@@ -46,6 +46,7 @@ class RateDialogFragment : DialogFragment() {
             context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
         userID = sharedPref.getString("userId", "").toString()
         username = sharedPref.getString("username", "").toString()
+        viewModel.ratingPair.value = Pair(0.0, 0)
 
         binding.notButton.setOnClickListener {
             dismiss()
@@ -53,11 +54,9 @@ class RateDialogFragment : DialogFragment() {
 
         binding.submitButton.setOnClickListener {
             val rate = binding.ratingBar.rating
-            Log.d("get","ratingbar value: ${binding.ratingBar.rating}")
             if (rate == 0F) {
                 Toast.makeText(activity, "Wrong value!", Toast.LENGTH_SHORT).show()
             } else {
-                Log.d("get","szia")
                 calculateRating(binding.ratingBar.rating.toDouble())
                 dismiss()
             }
@@ -69,7 +68,6 @@ class RateDialogFragment : DialogFragment() {
     private fun calculateRating(rating: Double) {
 
         viewModel.ratingPair.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            Log.d("hey","ittvan")
             updateRating(rating)
             updateUserProfile(rating)
             viewModel.ratedArticles.value!!.add(viewModel.currentArticle.value!!.articleId.toString())
@@ -91,7 +89,7 @@ class RateDialogFragment : DialogFragment() {
             Activities(
                 activityId,
                 "rate",
-                UserAct(userID,username),
+                UserAct(userID, username),
                 ArticleAct(
                     viewModel.currentArticle.value!!.articleId.toString(),
                     viewModel.currentArticle.value!!.title
@@ -121,7 +119,8 @@ class RateDialogFragment : DialogFragment() {
 
     private fun getRatings() {
         val database = FirebaseDatabase.getInstance()
-        val ref = database.getReference("articles").child(viewModel.currentArticle.value!!.articleId.toString()).child("ratings")
+        val ref = database.getReference("articles")
+            .child(viewModel.currentArticle.value!!.articleId.toString()).child("ratings")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 var ratingSum = 0.0
@@ -130,9 +129,7 @@ class RateDialogFragment : DialogFragment() {
                     ratingSum += rating.child("rating").value.toString().toDouble()
                     counter++
                 }
-                Log.d("get","getRating before ${viewModel.ratingPair.value}")
                 viewModel.ratingPair.value = Pair(ratingSum, counter)
-                Log.d("get","getRating after ${viewModel.ratingPair.value}")
             }
 
             override fun onCancelled(error: DatabaseError) {

@@ -34,8 +34,7 @@ class ArticleFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    // i will need this for comment section
-        Log.d("Helo", "articlefragment - oncreate")
+        // i will need this for comment section
         articleId = viewModel.articleId
         viewModel.comments.value = readCommentsFromDatabase()
         requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
@@ -80,8 +79,7 @@ class ArticleFragment : Fragment() {
     }
 
 
-
-    private fun readCommentsFromDatabase() :MutableList<CommentItem>{
+    private fun readCommentsFromDatabase(): MutableList<CommentItem> {
         val commentList = mutableListOf<CommentItem>()
         //reference for the current article
         myRefArticles.child(articleId.toString()).child("comments")
