@@ -20,17 +20,29 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
+/*
+This is the starting screen of the application.
+Here we load every data what we will need in the app
+like user data
+
+and here we decide whether the user is logged in or not
+ */
+
 class SplashFragment : Fragment() {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var binding: FragmentSplashBinding
     private lateinit var userID: String
     private val viewModel: GeneralViewModel by activityViewModels()
+
+    //for database
     private val database = FirebaseDatabase.getInstance()
     private val refUsers = database.getReference("usersLogin")
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.GONE
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_splash, container, false)
         sharedPref = requireActivity().getSharedPreferences("credentials", Context.MODE_PRIVATE)
@@ -41,38 +53,34 @@ class SplashFragment : Fragment() {
 
         loadRatingList()
 
-
         viewModel.userCredentials.observe(viewLifecycleOwner, Observer {
             if (credentials.isEmpty()) {
-                Log.d("Helo", "empty")
                 findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
             } else if (credentials.containsKey("email") && credentials.containsKey("password")) {
-                Log.d("Helo", "go to home")
                 findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
             }
         })
-
         loadUserCredentials()
         return binding.root
     }
 
     private fun loadUserCredentials() {
-        val pairList = mutableListOf<Pair<String,String>>()
-        refUsers.addValueEventListener(object :ValueEventListener{
+        val pairList = mutableListOf<Pair<String, String>>()
+        refUsers.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for (user in snapshot.children){
-                    val credentialPair = Pair(user.child("username").value.toString(), user.child("passwordHash").value.toString())
-                   // Log.d("Helo", "CredentialPair: $credentialPair")
-                    pairList+=credentialPair
+                for (user in snapshot.children) {
+                    val credentialPair = Pair(
+                        user.child("username").value.toString(),
+                        user.child("passwordHash").value.toString()
+                    )
+                    pairList += credentialPair
                 }
-                viewModel.userCredentials.value= pairList
+                viewModel.userCredentials.value = pairList
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.d("Helo", "oncancelled")
+                Log.w("Helo", "oncancelled")
             }
-
-
         })
     }
 
@@ -86,6 +94,7 @@ class SplashFragment : Fragment() {
                 }
                 viewModel.ratedArticles.value = ratingList
             }
+
             override fun onCancelled(error: DatabaseError) {
                 Log.w("TAG", "Failed to read value.", error.toException())
             }

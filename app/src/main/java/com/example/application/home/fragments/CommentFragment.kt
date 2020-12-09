@@ -4,16 +4,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.application.R
 import com.example.application.databinding.FragmentCommentBinding
@@ -29,16 +27,18 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
-
 class CommentFragment : Fragment() {
 
-
+    //for the database
     private var database = FirebaseDatabase.getInstance()
     private var myRefArticles = database.getReference("articles")
+
     private val viewModel: GeneralViewModel by activityViewModels()
-    private lateinit var sharedPref: SharedPreferences
-    private var comments: MutableList<CommentItem> = mutableListOf()
     private lateinit var binding: FragmentCommentBinding
+    private lateinit var sharedPref: SharedPreferences
+
+
+    private var comments: MutableList<CommentItem> = mutableListOf()
     private var articleId by Delegates.notNull<Int>()
     private lateinit var commentList: List<CommentItem>
 
@@ -65,39 +65,40 @@ class CommentFragment : Fragment() {
                 return@setOnClickListener
             }
             addCommentToDatabase(commentString)
-            var inputManager : InputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputManager.hideSoftInputFromWindow(view?.windowToken,0)
+            val inputManager: InputMethodManager =
+                context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(view?.windowToken, 0)
         }
         return binding.root
     }
 
+    /*
+    This method generate a random commentId
+    and insert into "comemnts" section
+    and also into the "activity section"
+     */
     private fun addCommentToDatabase(commentString: String) {
-        //val commentId = random
         val commentId = (99..99999).random()
         val userID = sharedPref.getString("userId", "").toString()
         val userName = sharedPref.getString("username", "").toString()
         val currentTime = SimpleDateFormat("yyyy dd M hh:mm:ss").format(Date())
 
         //add a comment to DataBase
-
-        Log.d("Helo", "username: $userName")
         val comment = CommentItem(commentId, commentString, userID!!.toInt(), currentTime, userName)
         myRefArticles.child(articleId.toString()).child("comments").push().setValue(comment)
         Toast.makeText(activity, "Comment added", Toast.LENGTH_SHORT).show()
         commentList += comment
-        Log.d("comment","comment: ${commentList}")
         binding.commentEditText.text.clear()
         recyclerViewAdaptation()
-        //findNavController().navigate(R.id.action_commentFragment_to_homeFragment)
 
-        // add to activity
+        // add to activity in the firebase
         val ref = database.getReference("users")
         val activityId = (999999..999999999).random()
         ref.child(userID).child("activities").child(activityId.toString()).setValue(
             Activities(
                 activityId,
                 "comment",
-                UserAct(userID,userName),
+                UserAct(userID, userName),
                 ArticleAct(
                     viewModel.currentArticle.value!!.articleId.toString(),
                     viewModel.currentArticle.value!!.title
@@ -106,11 +107,7 @@ class CommentFragment : Fragment() {
         )
     }
 
-
     private fun recyclerViewAdaptation() {
-//        val commentSize = comments.size
-//        val list = fillRecyclerViewWithComments(commentSize)
-//        binding.commentRecyclerView.adapter = CommentAdapter(list)
         binding.commentRecyclerView.adapter = CommentAdapter(commentList)
         binding.commentRecyclerView.layoutManager = LinearLayoutManager(activity)
         binding.commentRecyclerView.setHasFixedSize(true)
@@ -119,7 +116,6 @@ class CommentFragment : Fragment() {
     private fun fillRecyclerViewWithComments(size: Int): List<CommentItem> {
         val list = ArrayList<CommentItem>()
         for (i in 0 until size) {
-            Log.d("Helo", "timestamp: ${comments[i].timestamp} ")
             val item = CommentItem(
                 comments[i].commentId,
                 comments[i].commentText,
@@ -134,16 +130,14 @@ class CommentFragment : Fragment() {
 
     private fun validComment(commentString: String): Boolean {
         if (TextUtils.isEmpty(commentString)) {
-            Log.d("Helo", "ures")
             binding.commentEditText.error = "Please add a comment"
             return false
         }
         if (commentString.length >= 200) {
-            binding.commentEditText.error = "Please add a comment"
+            binding.commentEditText.error = "Your comment is too long"
             return false
         }
         return true
     }
-
 }
 

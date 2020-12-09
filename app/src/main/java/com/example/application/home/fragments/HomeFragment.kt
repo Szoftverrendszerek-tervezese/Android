@@ -1,7 +1,5 @@
 package com.example.application.home.fragments
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,19 +28,23 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: GeneralViewModel by activityViewModels()
 
+    //for database
     val database = FirebaseDatabase.getInstance()
     private val refArticles = database.getReference("articles")
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         val view = binding.root
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         val list = ArrayList<RecyclerItem>()
+
+        //load the articles from fireabse into a list
+        // which will be given to the adapter
+        //which will be displayed on the main screen
         refArticles.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
@@ -65,7 +67,7 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                             for (username in dataSnapshot.children) {
                                 if (username.key.toString() == id) {
                                     art.author = username.child("username").value.toString()
-                                    break;
+                                    break
                                 }
                             }
                         }
@@ -95,7 +97,6 @@ class HomeFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
         //this is need for the commentsection
         viewModel.articleId = item.articleId
-
         viewModel.currentArticle.value = item
         Navigation.findNavController(binding.root)
             .navigate(R.id.action_homeFragment_to_articleFragment)

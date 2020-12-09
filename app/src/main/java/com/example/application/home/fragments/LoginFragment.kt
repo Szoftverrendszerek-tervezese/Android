@@ -1,7 +1,6 @@
 package com.example.application.home.fragments
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
@@ -10,22 +9,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.application.R
 import com.example.application.databinding.FragmentLoginBinding
 import com.example.application.home.GeneralViewModel
-import com.example.application.home.HomeActivity
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import java.math.BigInteger
 import java.security.MessageDigest
 
+
+/*
+This class handles the authentication.
+We can check the user if his credential is correct or not
+with the data which was loaded in the splash screen
+ */
 
 class LoginFragment : Fragment() {
 
@@ -39,11 +39,9 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.GONE
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
-
-
 
         binding.loginButton.setOnClickListener {
             userName = binding.usernameInputLayout.editText?.text.toString()
@@ -81,7 +79,7 @@ class LoginFragment : Fragment() {
                     if (user.child("username").value.toString() == userName) {
                         sharedPref =
                             context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
-                        var editor = sharedPref.edit()
+                        val editor = sharedPref.edit()
                         editor.clear()
                         editor.putString("email", user.child("email").value.toString())
                         editor.putString("password", password.toMd5())
@@ -114,15 +112,14 @@ class LoginFragment : Fragment() {
             return false
         }
 
-
         if (TextUtils.isEmpty(password)) {
             binding.passwordInputLayout.error = "Password is Required"
             return false
         }
-
         return true
     }
 
+    // convert a string to a hash format (md5)
     private fun String.toMd5(): String {
         val md = MessageDigest.getInstance("MD5")
         return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')

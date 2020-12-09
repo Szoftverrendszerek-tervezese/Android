@@ -1,11 +1,9 @@
 package com.example.application.home.fragments
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.application.R
-import com.example.application.home.models.User
 import com.example.application.databinding.FragmentRegisterBinding
 import com.example.application.home.GeneralViewModel
-import com.example.application.home.HomeActivity
+import com.example.application.home.models.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -28,19 +25,32 @@ import com.google.firebase.ktx.Firebase
 import java.math.BigInteger
 import java.security.MessageDigest
 
+/*
+Here the new user will be inserted into the realtime database
+into two tables: into usersLogin( here will be stored only the login details)
+and into the users(here will be stored later his activities like the comments, ratings etc)
 
+ */
 class RegisterFragment : Fragment() {
 
+    //for database
+    private var myRef = Firebase.database.reference
+
+    //helper attributes
     private lateinit var binding: FragmentRegisterBinding
+    private lateinit var sharedPref: SharedPreferences
+    private val viewModel: GeneralViewModel by activityViewModels()
+
+
+    //attributes for the users
     private lateinit var email: String
     private lateinit var userName: String
     private lateinit var password: String
     private var userID: Int = 0
-    private var myRef = Firebase.database.reference
     private var userNames: MutableList<String> = mutableListOf()
     private var emails: MutableList<String> = mutableListOf()
-    private lateinit var sharedPref: SharedPreferences
-    private val viewModel: GeneralViewModel by activityViewModels()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getAllUsername(userNames, emails)
@@ -67,9 +77,7 @@ class RegisterFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
-        Log.d("Helo", "register")
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_register, container, false)
 
         binding.goToLoginTextView.setOnClickListener {
@@ -81,8 +89,6 @@ class RegisterFragment : Fragment() {
             userName = binding.userNameEditText.text.toString()
             password = binding.passwordEditText.text.toString()
             val passwordHash = password.toMd5()
-            Log.d("Helo", "Usernames : $userNames")
-            Log.d("Helo", "emails : $emails")
             userID = generateID()
             if (!isValidForm(userName, email, password))
                 return@setOnClickListener
@@ -96,7 +102,7 @@ class RegisterFragment : Fragment() {
             Toast.makeText(activity, "Registration Success", Toast.LENGTH_SHORT).show()
             sharedPref =
                 context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
-            var editor = sharedPref.edit()
+            val editor = sharedPref.edit()
             editor.clear()
             editor.putString("email", user.email)
             editor.putString("password", passwordHash)
@@ -111,7 +117,6 @@ class RegisterFragment : Fragment() {
 
 
     private fun writeNewUser(user: User) {
-
         //fill the usersLogin table
         myRef.child("usersLogin").child(user.userID.toString()).child("email").setValue(user.email)
         myRef.child("usersLogin").child(user.userID.toString()).child("passwordHash")
@@ -122,22 +127,18 @@ class RegisterFragment : Fragment() {
             .setValue(user.userID.toString())
 
         //fill the users  table
-
         myRef.child("users").child(user.userID.toString()).child("userId")
             .setValue(user.userID.toString())
         myRef.child("users").child(user.userID.toString()).child("username").setValue(user.userName)
-
-
-        Log.d("Helo", "end writeNewUser")
     }
 
+    // if the generated ID is in the database
+    //we need to generate a new one
+    //until the ID is unique
     private fun generateID(): Int {
-        Log.d("Helo", "begin generateID")
         val userID = (999999..999999999).random()
         viewModel.userId = userID
         val usersRef: DatabaseReference = myRef.child("usersLogin")
-
-
         usersRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (data in dataSnapshot.children) {
@@ -152,8 +153,6 @@ class RegisterFragment : Fragment() {
                 println("The read failed: " + databaseError.code)
             }
         })
-
-
         return userID
     }
 
@@ -163,9 +162,9 @@ class RegisterFragment : Fragment() {
         return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
     }
 
-    private fun isValidForm(userName: String, email: String, password: String): Boolean {
-        // form validation
 
+    // form validation
+    private fun isValidForm(userName: String, email: String, password: String): Boolean {
         if (TextUtils.isEmpty(userName)) {
             binding.userNameEditText.error = "UserName is Required"
             return false
@@ -207,9 +206,7 @@ class RegisterFragment : Fragment() {
         return true
     }
 
-
     private fun isValid(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
-
 }

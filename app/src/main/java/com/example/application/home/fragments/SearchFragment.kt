@@ -1,7 +1,6 @@
 package com.example.application.home.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,21 +28,21 @@ class SearchFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
-        Log.d("Helo", "oncreateview - search")
-
 
         //set the latest article text view in the search screen
         val latestArticlePosition = getLatestArticle()
-        binding.latestTextView.text =
+        val latestArticle =
             viewModel.articles[latestArticlePosition].title + " by " + viewModel.articles[latestArticlePosition].author
+        binding.latestTextView.text = latestArticle
 
         //set the top rated article text view in the search screen
         val topRatedArticlePosition = getTopRatedArticle()
-        binding.topRatedTextView.text =
+        val topRatedArticle =
             viewModel.articles[topRatedArticlePosition].title + " by " + viewModel.articles[topRatedArticlePosition].author
+        binding.topRatedTextView.text = topRatedArticle
 
 
         binding.latestTextView.setOnClickListener {
@@ -62,10 +61,6 @@ class SearchFragment : Fragment() {
             val newString = viewModel.articles[i].title + " by " + viewModel.articles[i].author
             articleTitles.plusAssign(newString)
         }
-
-
-        Log.d("Helo", "articleTitles: ${articleTitles.size}")
-        Log.d("Helo", "articles: $viewModel.articles")
 
         val adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, articleTitles)
@@ -96,18 +91,16 @@ class SearchFragment : Fragment() {
                     viewModel.articles[newPos].author,
                     viewModel.articles[newPos].comments
                 )
-                //this is for the article
+                //this is for the article which will be displayed
                 viewModel.currentArticle.value = article
-
                 findNavController().navigate(R.id.action_searchFragment_to_articleFragment)
-
             }
         return binding.root
     }
 
     private fun getTopRatedArticle(): Int {
         var position = 0
-        var topRating = viewModel.articles[0].rating
+        val topRating = viewModel.articles[0].rating
         for (i in 0 until viewModel.articles.size) {
             if (topRating < viewModel.articles[i].rating) {
                 position = i

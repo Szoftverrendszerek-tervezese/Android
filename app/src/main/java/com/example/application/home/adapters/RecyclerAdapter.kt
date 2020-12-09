@@ -8,6 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.application.R
 import com.example.application.home.models.RecyclerItem
 
+/*
+This Class connects the HomeFragment with the recycler items.
+to make a personalized recylerview
+This displayes the articles in the HomeFragment
+ */
+
 class RecyclerAdapter(
     private val itemList: List<RecyclerItem>,
     private val listener: OnItemClickListener
@@ -16,18 +22,14 @@ class RecyclerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.recycler_item, parent, false)
-
         return RecyclerViewHolder(itemView)
     }
 
-
     override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
         val currentItem = itemList[position]
-
         holder.title.text = currentItem.title
         holder.rating.text = currentItem.rating
         holder.description.text = currentItem.description
-
     }
 
     override fun getItemCount() = itemList.size
@@ -53,5 +55,4 @@ class RecyclerAdapter(
     interface OnItemClickListener {
         fun onItemClick(item: RecyclerItem)
     }
-
 }

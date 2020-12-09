@@ -9,6 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.application.R
 import com.example.application.home.models.CommentItem
 
+/*
+This Class connects the CommentFragment with the comment items.
+to make a personalized recylerview
+ */
+
 
 class CommentAdapter(private val itemList: List<CommentItem>) :
     RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {

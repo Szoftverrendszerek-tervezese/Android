@@ -3,12 +3,7 @@ package com.example.application.home.fragments
 import android.app.ActionBar
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.BackgroundColorSpan
-import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +34,6 @@ class ProfileFragment : Fragment() {
     private lateinit var username: String
     private val viewModel: GeneralViewModel by activityViewModels()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity().findViewById<View>(R.id.bottomNavigationView).visibility = View.VISIBLE
@@ -48,21 +42,17 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
-        Log.d("Helo", "Meghivodsz te szaros ? ")
 
         //this part of the code will need to display the user data on the screen
         sharedPref = context?.getSharedPreferences("credentials", Context.MODE_PRIVATE)!!
-
         userID = sharedPref.getString("userId", "").toString()
         email = sharedPref.getString("email", "").toString()
         username = sharedPref.getString("username", "").toString()
-
         binding.emailText.text = email
         binding.usernameText.text = username
         binding.signOut.setOnClickListener {
-            Log.d("Helo", "Clear shared preferences")
             val settings =
                 requireContext().getSharedPreferences("credentials", Context.MODE_PRIVATE)
             settings.edit().clear().apply()
@@ -96,9 +86,9 @@ class ProfileFragment : Fragment() {
             view.measure(desiredWidth, MeasureSpec.UNSPECIFIED)
             totalHeight += view.measuredHeight
         }
-        val params: ViewGroup.LayoutParams = listView.getLayoutParams()
-        params.height = totalHeight + listView.getDividerHeight() * listAdapter.getCount()
-        listView.setLayoutParams(params)
+        val params: ViewGroup.LayoutParams = listView.layoutParams
+        params.height = totalHeight + listView.dividerHeight * listAdapter.count
+        listView.layoutParams = params
         listView.requestLayout()
     }
 
@@ -106,7 +96,7 @@ class ProfileFragment : Fragment() {
     private fun getActivityList() {
         val database = FirebaseDatabase.getInstance()
         val ref = database.getReference("users").child(userID).child("activities")
-        var activityList: MutableList<String> = mutableListOf()
+        val activityList: MutableList<String> = mutableListOf()
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (activity in dataSnapshot.children) {
@@ -114,7 +104,8 @@ class ProfileFragment : Fragment() {
                         activityList.add(
                             "You have rated the ${
                                 activity.child("targetArticle")
-                                    .child("articletitle").value.toString()} article"
+                                    .child("articletitle").value.toString()
+                            } article"
                         )
                     }
                     if (activity.child("activity").value.toString() == "comment") {
