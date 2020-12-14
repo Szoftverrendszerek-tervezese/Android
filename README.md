@@ -1,11 +1,9 @@
 # Android
 
-Projektünk, a "Cross Platform learning environment" egy tudásmegosztó oldal Android verziója.
+Our project, a "Cross Platform learning environment" is a knowledge - sharing Android app written in Kotlin
 
 
-Repository felépítése:
 
+docs: contains teh documentation of the software
 
-docs: ez tartalmazza a dokumentációt 
-
-a repository többi része pedig a forráskódot
+The rest of the repository contains the source code
